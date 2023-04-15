@@ -1,9 +1,20 @@
 package com.Projekat_Web.Projekat_Web.entity;
 
-import jakarta.persistence.Column;
+import jakarta.persistence.*;
+import lombok.*;
 
+@Entity
+@Getter @Setter @ToString
+@Table(name = "zanr")
 public class Zanr {
 
-    @Column
-    private String naziv = new String();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id; //PRIMARNI KLJUC KOJI SE KORISTI KAO VEZA
+
+    @Column(name = "naziv", nullable = false, unique = true)
+    private String naziv;
+
+
 }
+

@@ -1,8 +1,17 @@
 package com.Projekat_Web.Projekat_Web.entity;
 
-import jakarta.persistence.Column;
+import jakarta.persistence.*;
+import lombok.*;
 
-public class ZahtevZaAktivacijuNalogaAutora {
+import java.io.*;
+//import java.time.LocalDate;
+import java.util.Date;
+
+enum StatusZahteva {NA_CEKANJU, ODBIJEN, ODOBREN}
+@Entity
+@Getter @Setter @ToString
+@Table(name = "zahtev_za_aktivaciju_naloga_autora")
+public class ZahtevZaAktivacijuNalogaAutora implements Serializable {
 
     @Column
     private String email;
@@ -14,14 +23,9 @@ public class ZahtevZaAktivacijuNalogaAutora {
     private String poruka;
 
     @Column
-    private String datum;//date ili string
+    private Date datum;
 
     @Column
-    private String status; // ????
-
-
-
-
-
+    private StatusZahteva status;
 
 }

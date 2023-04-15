@@ -1,8 +1,20 @@
 package com.Projekat_Web.Projekat_Web.entity;
 
-import jakarta.persistence.Column;
+import jakarta.persistence.*;
+import lombok.*;
 
-public class Recenzija {
+import java.io.*;
+//import java.time.LocalDate;
+import java.util.Date;
+
+@Entity
+@Getter @Setter @ToString
+@Table(name = "recenzija")
+public class Recenzija implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column
     private double ocena;
@@ -10,10 +22,12 @@ public class Recenzija {
     @Column
     private String tekst;
 
-    @Column
-    private String datum; //string ili date??
+    @Column(name = "datum_recenzije")
+    private Date datumRecenzije;
 
-    //korisnik kompozicija???
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "korisnik_id", referencedColumnName = "id")
+    private Korisnik korisnik;
 
 
 
