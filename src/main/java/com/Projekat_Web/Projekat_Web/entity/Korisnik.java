@@ -16,33 +16,34 @@ public class Korisnik implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "korisnikk_id")
+    protected Long id;
 
     @Column(nullable = false)
-    private String ime;
+    protected String ime;
 
     @Column(nullable = false)
-    private String prezime;
+    protected String prezime;
 
     @Column(unique = true, nullable = false, name = "korisnicko_ime")
-    private String korisnickoIme;
+    protected String korisnickoIme;
 
     @Column(unique = true, nullable = false)
-    private String mail;
+    protected String mail;
 
     @Column(nullable = false)
-    private String lozinka;
+    protected String lozinka;
 
     @Column(name = "datum_rodjenja")
-    private LocalDate datumRodjenja;
+    protected LocalDate datumRodjenja;
 
     @Column(name = "profilna_slika")
-    private String profilnaSlika;
+    protected String profilnaSlika;
 
     @Column
-    private String opis;
-
+    protected String opis;
+    @Enumerated(EnumType.STRING)
     @Column
-    private Uloga uloga;
+    protected Uloga uloga;
 
 }

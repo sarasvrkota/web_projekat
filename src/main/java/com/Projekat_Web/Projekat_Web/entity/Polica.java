@@ -22,8 +22,8 @@ public class Polica implements Serializable {
     @Column
     private boolean primarna;
 
-    @OneToMany(mappedBy = "polica", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @Column(name = "stavka_police")
+    @OneToMany( fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Column(name = "stavka")
     private Set<StavkaPolice> stavkaPolice = new HashSet<>();
 
 

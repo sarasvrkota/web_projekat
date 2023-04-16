@@ -10,13 +10,23 @@ import java.io.*;
 @Table(name = "stavka_police")
 public class StavkaPolice implements Serializable {
 
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column
+    private Long id;
+
+
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "knjiga_id", referencedColumnName = "id")
+    @JoinColumn(name = "knjiga_id", referencedColumnName = "naslov")
     private Knjiga knjiga;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "recenzija_id", referencedColumnName = "id")
     private Recenzija recenzija;
+
+/*    @ManyToOne(fetch = FetchType.LAZY)
+    private Polica polica;*/
 
 // da li jedna stavka police moze biti na vise polica????????
 }

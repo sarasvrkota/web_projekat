@@ -13,6 +13,10 @@ enum StatusZahteva {NA_CEKANJU, ODBIJEN, ODOBREN}
 @Table(name = "zahtev_za_aktivaciju_naloga_autora")
 public class ZahtevZaAktivacijuNalogaAutora implements Serializable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "zahtev_id") //PRIMARNI KLJUC , u bazi se tako zove kolona
+    private Long id;
     @Column
     private String email;
 
@@ -26,6 +30,7 @@ public class ZahtevZaAktivacijuNalogaAutora implements Serializable {
     private Date datum;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private StatusZahteva status;
 
 }

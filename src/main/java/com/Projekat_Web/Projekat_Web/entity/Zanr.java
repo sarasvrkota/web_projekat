@@ -8,10 +8,10 @@ import lombok.*;
 @Table(name = "zanr")
 public class Zanr {
 
-    @Id
+   /* @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; //PRIMARNI KLJUC KOJI SE KORISTI KAO VEZA
-
+    private Long id; //PRIMARNI KLJUC KOJI SE KORISTI KAO VEZA*/
+    @Id
     @Column(name = "naziv", nullable = false, unique = true)
     private String naziv;
 

@@ -4,17 +4,20 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter @Setter @ToString
 @Table(name = "knjiga")
 public class Knjiga {
 
-    @Id
+    /*@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "knjiga_id") //PRIMARNI KLJUC , u bazi se tako zove kolona
-    private Long id;
+    @Column//PRIMARNI KLJUC , u bazi se tako zove kolona
+    private Long id;*/
 
+    @Id
     @Column
     private String naslov;
 
@@ -33,13 +36,20 @@ public class Knjiga {
     @Column
     private String opis;
 
-    @OneToOne(cascade = CascadeType.ALL) //jedna knjiga jedan zanr
-    @JoinColumn(name = "zanr_id", referencedColumnName = "id") ///ime kolone je zanr_id (strani kljuc za tabelu zanr)veza izmedju zanr i knjiga, ALIJAZ ZA ID IZ ZANRA
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL) //jedna knjiga jedan zanr
+    @JoinColumn(name = "zanr", referencedColumnName = "naziv") ///ime kolone je zanr_id (strani kljuc za tabelu zanr)veza izmedju zanr i knjiga, ALIJAZ ZA ID IZ ZANRA
     // a referance je primarni kljuc u Zanr tabeli (kolona id)
-    private Zanr zanr; //ovo polje se povezuje sa entitetim zanr preko zanr_id
+    private Zanr zanr = new Zanr(); //ovo polje se povezuje sa entitetim zanr preko zanr_id
 
     @Column
     private double ocena;
 
+
+/*
+   @ManyToOne(fetch = FetchType.EAGER)
+    private Autor autor;
+*/
+  /*  @ManyToMany(mappedBy = "knjiga")
+    private Set<Autor> autor = new HashSet<>();*/
 
 }
