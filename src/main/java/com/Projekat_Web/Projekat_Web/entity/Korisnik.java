@@ -5,6 +5,8 @@ import lombok.*;
 
 import java.io.*;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 enum Uloga {CITALAC, AUTOR, ADMINISTRATOR}
 
@@ -45,5 +47,8 @@ public class Korisnik implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column
     protected Uloga uloga;
+
+    @OneToMany(fetch =  FetchType.LAZY, cascade = CascadeType.ALL)
+    protected Set<Polica> police = new HashSet<>();
 
 }

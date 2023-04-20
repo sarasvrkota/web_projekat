@@ -17,6 +17,7 @@ INSERT INTO knjiga(naslov, naslovna_fotografija, isbn, datum_objavljivanja, broj
 INSERT INTO knjiga(naslov, naslovna_fotografija, isbn, datum_objavljivanja, broj_strana, opis, ocena, zanr) VALUES ('EXCEL ZA POCETNIKE', ' ', '978-92-95055-02-5', '2002-09-04', ' 103', 'Osnovni pojmovi', 3 , 'internet i racunari' );
 INSERT INTO knjiga(naslov, naslovna_fotografija, isbn, datum_objavljivanja, broj_strana, opis, ocena, zanr) VALUES ('Teorija grafova', ' ', '978-94-94055-02-4', '2015-11-03', ' 155', 'osnovni pojmovi teorije grafova i reseni zadaci', 2.5 , 'internet i racunari' );
 
+
 INSERT INTO autor_spisak_knjiga(autor_korisnikk_id, spisak_knjiga_naslov) VALUES(1, 'C++ PROGRAMSKI JEZIK');
 INSERT INTO autor_spisak_knjiga(autor_korisnikk_id, spisak_knjiga_naslov) VALUES(1, 'EXCEL ZA POCETNIKE');
 
@@ -25,8 +26,12 @@ INSERT INTO recenzija (ocena, tekst, datum_recenzije, korisnik_id) VALUES (5, 'o
 INSERT INTO stavka_police(recenzija_id, knjiga_id) VALUES (1, 'EXCEL ZA POCETNIKE');
 
 INSERT INTO polica (naziv, primarna) VALUES ('polica1', 1);
+INSERT INTO polica (naziv, primarna) VALUES ('Want to Read', 1);
+INSERT INTO polica (naziv, primarna) VALUES ('Currently Reading', 1);
+INSERT INTO polica (naziv, primarna) VALUES ('Read', 1);
 
 
+INSERT INTO korisnik_police(korisnik_korisnikk_id, police_id) VALUES (1, 1);
 
 INSERT INTO polica_stavka_police(polica_id, stavka_police_id) VALUES (1, 1);
-INSERT INTO zahtev_za_aktivaciju_naloga_autora (email, telefon, poruka, datum, status) VALUES ('nsdespot@gmail.com', '0645541596', 'zahtev', '2022-01-02', 'ODOBREN');
+INSERT INTO zahtev_za_aktivaciju_naloga_autora (email, telefon, poruka, datum, status, autor_korisnikk_id) VALUES ('nsdespot@gmail.com', '0645541596', 'zahtev', '2022-01-02', 'ODOBREN', 1);

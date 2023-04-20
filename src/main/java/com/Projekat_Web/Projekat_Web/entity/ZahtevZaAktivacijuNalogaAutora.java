@@ -33,4 +33,8 @@ public class ZahtevZaAktivacijuNalogaAutora implements Serializable {
     @Enumerated(EnumType.STRING)
     private StatusZahteva status;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    private Autor autor;
+
+
 }
