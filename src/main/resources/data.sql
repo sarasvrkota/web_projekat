@@ -11,7 +11,7 @@ INSERT INTO autor (je_aktivan, korisnikk_id) VALUES (1, 1);
 INSERT INTO autor (je_aktivan, korisnikk_id) VALUES (1, 2);
 INSERT INTO autor (je_aktivan, korisnikk_id) VALUES (1, 3);
 
-INSERT INTO citalac (korisnikk_id) VALUES (4);
+
 
 INSERT INTO knjiga(naslov, naslovna_fotografija, isbn, datum_objavljivanja, broj_strana, opis, ocena, zanr) VALUES ( 'C++ PROGRAMSKI JEZIK', ' ', '978-93-96055-02-6', '2019-07-11', ' 999', 'Osnove objekno-orijentisanog programiranja kroz programski jezik C++', 5 , 'strucna literatura' );
 INSERT INTO knjiga(naslov, naslovna_fotografija, isbn, datum_objavljivanja, broj_strana, opis, ocena, zanr) VALUES ('EXCEL ZA POCETNIKE', ' ', '978-92-95055-02-5', '2002-09-04', ' 103', 'Osnovni pojmovi', 3 , 'internet i racunari' );

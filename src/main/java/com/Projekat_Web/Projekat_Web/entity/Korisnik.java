@@ -8,13 +8,14 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-enum Uloga {CITALAC, AUTOR, ADMINISTRATOR}
-
 @Entity
 @Getter @Setter @ToString
 @Table(name = "korisnik")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Korisnik implements Serializable {
+
+
+    public enum Uloga {CITALAC, AUTOR, ADMINISTRATOR}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,6 +45,7 @@ public class Korisnik implements Serializable {
 
     @Column
     protected String opis;
+
     @Enumerated(EnumType.STRING)
     @Column
     protected Uloga uloga;
@@ -51,4 +53,38 @@ public class Korisnik implements Serializable {
     @OneToMany(fetch =  FetchType.LAZY, cascade = CascadeType.ALL)
     protected Set<Polica> police = new HashSet<>();
 
+    public Korisnik(String ime, String prezime, String korisnickoIme, String mail,
+                    String lozinka, LocalDate datumRodjenja, String profilnaSlika, String opis,
+                    Uloga uloga)
+    {
+        this.ime = ime;
+        this. prezime = prezime;
+        this.korisnickoIme = korisnickoIme;
+        this.mail = mail;
+        this.lozinka = lozinka;
+        this.datumRodjenja = datumRodjenja;
+        this.profilnaSlika = profilnaSlika;
+        this.opis = opis;
+        this.uloga = uloga;
+    }
+    public Korisnik() {}
+
+   /* public Korisnik(String ime, String prezime, String mail, LocalDate datumRodjenja, String profilnaSlika,
+                    String opis, String uloga) {
+    }*/
+
+    public Korisnik(Long id, String ime, String prezime, String korisnickoIme, String mail, String lozinka,
+                    LocalDate datumRodjenja, String profilnaSlika, String opis, Uloga uloga) {
+        this.id = id;
+        this.ime = ime;
+        this.prezime = prezime;
+        this.korisnickoIme = korisnickoIme;
+        this.mail = mail;
+        this.lozinka = lozinka;
+        this.datumRodjenja = datumRodjenja;
+        this.profilnaSlika = profilnaSlika;
+        this.opis = opis;
+        this.uloga = uloga;
+
+    }
 }

@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,11 +22,36 @@ public class Autor extends Korisnik implements Serializable {
     @Column(name = "spisak_knjiga")
     private Set<Knjiga> spisakKnjiga = new HashSet<>();
 
- /*   @ManyToMany
+    public Autor(String ime, String prezime, String mail, LocalDate datumRodjenja,
+                 String profilnaSlika, String opis, Uloga uloga, boolean jeAktivan) {
+
+        //super(ime, prezime, mail, datumRodjenja, profilnaSlika, opis, uloga);
+        this.ime = ime;
+        this.prezime = prezime;
+        this.mail= mail;
+        this.datumRodjenja = datumRodjenja;
+        this.profilnaSlika = profilnaSlika;
+        this.opis = opis;
+        this.uloga = uloga;
+        this.jeAktivan = jeAktivan;
+    }
+
+    public Autor(String ime, String prezime, String korisnickoIme, String mail, String lozinka, LocalDate datumRodjenja,
+                 String profilnaSlika, String opis, Uloga uloga, boolean jeAktivan, Set<Knjiga> spisakKnjiga) {
+        super(ime, prezime, korisnickoIme, mail, lozinka, datumRodjenja, profilnaSlika, opis, uloga);
+        this.jeAktivan = jeAktivan;
+        this.spisakKnjiga = spisakKnjiga;
+    }
+
+    /*   @ManyToMany
     @JoinTable(name = "spisak_knjiga",
             joinColumns = @JoinColumn(name = "autor_id", referencedColumnName = "autor_korisnikk_id"),
             inverseJoinColumns = @JoinColumn(name = "knjiga_id", referencedColumnName = "id"))
     private Set<Knjiga> spisak_knjiga = new HashSet<>();*/
+
+    public Autor() {}
+
+
 
 
 
