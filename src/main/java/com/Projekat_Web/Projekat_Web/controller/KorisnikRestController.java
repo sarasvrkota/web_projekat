@@ -1,7 +1,9 @@
 package com.Projekat_Web.Projekat_Web.controller;
 
+import com.Projekat_Web.Projekat_Web.dto.KnjigaDto;
 import com.Projekat_Web.Projekat_Web.dto.KorisnikDto;
 import com.Projekat_Web.Projekat_Web.dto.LoginDto;
+import com.Projekat_Web.Projekat_Web.entity.Knjiga;
 import com.Projekat_Web.Projekat_Web.entity.Korisnik;
 import com.Projekat_Web.Projekat_Web.service.KorisnikService;
 import jakarta.servlet.http.HttpSession;
@@ -11,6 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin
@@ -85,6 +89,29 @@ public class KorisnikRestController {
         session.invalidate();
         return new ResponseEntity("Successfully logged out", HttpStatus.OK);
     }
+
+    @GetMapping(value = "/pretragapoimenu",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<KorisnikDto>> getKorisnik(@RequestParam(value = "ime") String ime, @RequestParam(value = "prezime") String prezime)
+    {
+        List<Korisnik> korisnici = new ArrayList<Korisnik>();
+
+        korisnici = this.korisnikService.findByImeAndPrezime(ime, prezime);
+
+        List<KorisnikDto> korisnikDtos = new ArrayList<KorisnikDto>();
+
+        for (Korisnik k : korisnici) {
+
+            KorisnikDto korisnikDto = new KorisnikDto(k.getId(), k.getIme(), k.getPrezime(), k.getKorisnickoIme(), k.getMail(),
+                                      k.getLozinka(), k.getDatumRodjenja(), k.getProfilnaSlika(), k.getOpis(), k.getUloga());
+
+            korisnikDtos.add(korisnikDto);
+
+        }
+        return new ResponseEntity<>(korisnikDtos, HttpStatus.OK);
+
+    }
+
+
 
 
 }

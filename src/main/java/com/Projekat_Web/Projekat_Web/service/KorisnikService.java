@@ -6,6 +6,7 @@ import com.Projekat_Web.Projekat_Web.repository.KorisnikRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,4 +42,8 @@ public class KorisnikService {
 
         return null;
     }*/
+
+    public List<Korisnik> findByImeAndPrezime(String ime, String prezime) {
+        return korisnikRepository.findByImeAndPrezime(ime, prezime);
+    }
 }

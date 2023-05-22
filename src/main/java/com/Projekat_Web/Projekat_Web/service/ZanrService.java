@@ -1,22 +1,21 @@
 package com.Projekat_Web.Projekat_Web.service;
 
-import com.Projekat_Web.Projekat_Web.entity.Knjiga;
 import com.Projekat_Web.Projekat_Web.entity.Recenzija;
+import com.Projekat_Web.Projekat_Web.entity.Zanr;
 import com.Projekat_Web.Projekat_Web.repository.RecenzijaRepository;
+import com.Projekat_Web.Projekat_Web.repository.ZanrRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
 @Service
-public class RecenzijaService {
+public class ZanrService
+
+{
 
     @Autowired
-    private RecenzijaRepository recenzijaRepository;
-    public List<Recenzija> findAll(){
-        return recenzijaRepository.findAll();
+    private ZanrRepository zanrRepository;
+    public List<Zanr> findAll(){
+        return zanrRepository.findAll();
     }
-
-
-
 }
