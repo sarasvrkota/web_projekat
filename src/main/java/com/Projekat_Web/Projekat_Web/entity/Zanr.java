@@ -15,6 +15,10 @@ public class Zanr {
     @Column(name = "naziv", nullable = false, unique = true)
     private String naziv;
 
+    public Zanr(String naziv) {
+        this.naziv = naziv;
+    }
 
+    public Zanr() {}
 }
 

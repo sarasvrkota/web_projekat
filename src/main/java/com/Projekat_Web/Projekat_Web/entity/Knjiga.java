@@ -52,4 +52,16 @@ public class Knjiga {
   /*  @ManyToMany(mappedBy = "knjiga")
     private Set<Autor> autor = new HashSet<>();*/
 
+    public Knjiga(String naslov, String naslovnaFotografija, String ISBN, Date datumObjavljivanja,
+                  int brojStrana, String opis, Zanr zanr, double ocena) {
+        this.naslov = naslov;
+        this.naslovnaFotografija = naslovnaFotografija;
+        this.ISBN = ISBN;
+        this.datumObjavljivanja = datumObjavljivanja;
+        this.brojStrana = brojStrana;
+        this.opis = opis;
+        this.zanr = zanr;
+        this.ocena = ocena;
+    }
+    public Knjiga() {}
 }

@@ -1,13 +1,17 @@
 package com.Projekat_Web.Projekat_Web.configuration;
 
 
+import com.Projekat_Web.Projekat_Web.entity.Knjiga;
 import com.Projekat_Web.Projekat_Web.entity.Korisnik;
 import com.Projekat_Web.Projekat_Web.entity.StavkaPolice;
+import com.Projekat_Web.Projekat_Web.entity.Zanr;
 import com.Projekat_Web.Projekat_Web.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 
 import java.util.Calendar;
@@ -45,11 +49,21 @@ public class DataBaseConfiguration {
     private ZanrRepository zanrRepository;
 
     @Bean
-    public boolean instantiate(){
+    public boolean instantiate() throws ParseException {
         Korisnik korisnik1 = new Korisnik( "Sara", "Svrkota", "sarasaki", "volimdjacko@gmail.com",
                                             "volimkarbonaru", LocalDate.of(1999, 5, 9), " ",
                                             "nasledjivanje nije kada", AUTOR);
         korisnikRepository.save(korisnik1);
+
+        Zanr zanr1 = new Zanr("fantastika");
+        //zanrRepository.save(zanr1);
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date datum = format.parse("1999-04-23");
+        Knjiga knjiga1 = new Knjiga("Hari Poter i kamen mudrosti", " ", "12392992",
+                                    datum, 450, "najjaca", zanr1, 10.00);
+
+        knjigaRepository.save(knjiga1);
 
 
         /*Department department1 = new Department("first department");
