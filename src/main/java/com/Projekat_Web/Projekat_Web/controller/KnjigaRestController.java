@@ -42,6 +42,11 @@ public class KnjigaRestController {
             knjigaDtos.add(knjigaDto);
 
         }
+
+        if(knjigaDtos.isEmpty()) {
+
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(knjigaDtos, HttpStatus.OK);
 
     }
@@ -63,6 +68,10 @@ public class KnjigaRestController {
 
             knjigaDtos.add(knjigaDto);
 
+        }
+        if(knjigaDtos.isEmpty()) {
+
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(knjigaDtos, HttpStatus.OK);
 

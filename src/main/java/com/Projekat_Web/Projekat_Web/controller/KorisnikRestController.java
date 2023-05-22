@@ -3,8 +3,10 @@ package com.Projekat_Web.Projekat_Web.controller;
 import com.Projekat_Web.Projekat_Web.dto.KnjigaDto;
 import com.Projekat_Web.Projekat_Web.dto.KorisnikDto;
 import com.Projekat_Web.Projekat_Web.dto.LoginDto;
+import com.Projekat_Web.Projekat_Web.dto.PolicaDto;
 import com.Projekat_Web.Projekat_Web.entity.Knjiga;
 import com.Projekat_Web.Projekat_Web.entity.Korisnik;
+import com.Projekat_Web.Projekat_Web.entity.Polica;
 import com.Projekat_Web.Projekat_Web.service.KorisnikService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +63,10 @@ public class KorisnikRestController {
                                 korisnik.getMail(), korisnik.getLozinka(), korisnik.getDatumRodjenja(), korisnik.getProfilnaSlika(),
                                 korisnik.getOpis(), korisnik.getUloga());
 
+        if(korisnikDto==null)  {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
         return new ResponseEntity<>(korisnikDto, HttpStatus.OK);
     }
 
@@ -107,11 +113,28 @@ public class KorisnikRestController {
             korisnikDtos.add(korisnikDto);
 
         }
+        if(korisnikDtos.isEmpty()) {
+
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(korisnikDtos, HttpStatus.OK);
 
     }
 
+   /* @GetMapping(value = "/{}/police", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<PolicaDto>> getPolicijeByKorisnikId(@PathVariable Long korisnikId) {
+        Korisnik korisnik = korisnikService.findById(korisnikId);
 
+        if (korisnik == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+
+        List<Polica> police = policaService.getPolicijeByKorisnik(korisnik);
+        List<PolicaDto> policeDto = policaService.convertToDtoList(police);
+
+        return ResponseEntity.ok(policeDto);
+    }*/
 
 
 }
