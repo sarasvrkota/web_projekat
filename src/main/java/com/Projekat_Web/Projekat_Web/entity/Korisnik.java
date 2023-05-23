@@ -53,6 +53,8 @@ public class Korisnik implements Serializable {
     @OneToMany(fetch =  FetchType.LAZY, cascade = CascadeType.ALL)
     protected Set<Polica> police = new HashSet<>();
 
+    protected String potvrdaLozinke;
+
     public Korisnik(String ime, String prezime, String korisnickoIme, String mail,
                     String lozinka, LocalDate datumRodjenja, String profilnaSlika, String opis,
                     Uloga uloga)
@@ -85,6 +87,33 @@ public class Korisnik implements Serializable {
         this.profilnaSlika = profilnaSlika;
         this.opis = opis;
         this.uloga = uloga;
+
+    }
+
+ /*   public Korisnik( String ime, String prezime, String korisnickoIme, String mail, String lozinka,
+                    String potvrdaLozinke, LocalDate datumRodjenja, String profilnaSlika, String opis, Uloga uloga) {
+        this.ime = ime;
+        this.prezime = prezime;
+        this.korisnickoIme = korisnickoIme;
+        this.mail = mail;
+        this.lozinka = lozinka;
+        this.potvrdaLozinke = potvrdaLozinke;
+        this.datumRodjenja = datumRodjenja;
+        this.profilnaSlika = profilnaSlika;
+        this.opis = opis;
+        this.uloga = uloga;
+
+    }*/
+
+    public Korisnik(String ime, String prezime, String korisnickoIme, String mail, String lozinka, String potvrdaLozinke) {
+
+        this.ime = ime;
+        this.prezime = prezime;
+        this.korisnickoIme = korisnickoIme;
+        this.mail = mail;
+        this.lozinka = lozinka;
+        this.potvrdaLozinke = potvrdaLozinke;
+
 
     }
 }

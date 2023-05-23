@@ -33,6 +33,11 @@ public class KnjigaService {
         return knjigaRepository.findByNaslovContainingIgnoreCase(naslov);
     }
 
+    public Knjiga findByNaslov(String naslov) {
+        return knjigaRepository.findByNaslov(naslov);
+    }
+
+
 
 
 

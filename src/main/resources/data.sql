@@ -1,4 +1,4 @@
-INSERT INTO korisnik (ime, prezime, korisnicko_ime, mail, lozinka, datum_rodjenja, profilna_slika, opis, uloga) VALUES ('Petar', 'Petrovic', 'nspera', 'pera.petrovic@gmail.com', 'dacabff', '2003-03-07', ' ', 'juhuuh', 'AUTOR');
+INSERT INTO korisnik (ime, prezime, korisnicko_ime, mail, lozinka, datum_rodjenja, profilna_slika, opis, uloga) VALUES ('Petar', 'Petrovic', 'nspera', 'pera.petrovic@gmail.com', 'dacabff', '2003-03-07', ' ', 'juhuuh', 'ADMINISTRATOR');
 INSERT INTO korisnik (ime, prezime, korisnicko_ime, mail, lozinka, datum_rodjenja, profilna_slika, opis, uloga) VALUES ('Predrag', 'Stojic', 'djape', 'nspredrag@gmail.com', 'tommy123', '1999-05-09', ' ', 'imam garazu', 'AUTOR');
 INSERT INTO korisnik (ime, prezime, korisnicko_ime, mail, lozinka, datum_rodjenja, profilna_slika, opis, uloga) VALUES ('Radojka', 'Markovic', 'rada', 'nsprada@gmail.com', 'djandja', '1995-04-07', ' ', 'volim grafove', 'AUTOR');
 INSERT INTO korisnik (ime, prezime, korisnicko_ime, mail, lozinka, datum_rodjenja, profilna_slika, opis, uloga) VALUES ('Buda', 'Bajic', 'budica', 'buda@gmail.com', 'analiza', '1990-07-07', ' ', 'volim analizu', 'CITALAC');

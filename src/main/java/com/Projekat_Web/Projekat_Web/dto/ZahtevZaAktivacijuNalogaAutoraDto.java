@@ -10,23 +10,17 @@ import java.util.Date;
 @Getter @Setter @ToString
 public class ZahtevZaAktivacijuNalogaAutoraDto {
 
-    private Long id;
+
     private String email;
     private String telefon;
     private String poruka;
-    private Date datum;
-    private StatusZahteva status;
-    private Autor autor;
 
-    public ZahtevZaAktivacijuNalogaAutoraDto(Long id, String email, String telefon,
-                                             String poruka, Date datum, StatusZahteva status,
-                                             Autor autor) {
-        this.id = id;
+
+    public ZahtevZaAktivacijuNalogaAutoraDto(String email, String telefon, String poruka) {
+
         this.email = email;
         this.telefon = telefon;
         this.poruka = poruka;
-        this.datum = datum;
-        this.status = status;
-        this.autor = autor;
+
     }
 }

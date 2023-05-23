@@ -19,7 +19,7 @@ public class KorisnikService {
     {
         return this.korisnikRepository.save(korisnik);
     }
-
+    public Korisnik findByMail(String mail) { return this.korisnikRepository.findByMail(mail); }
     public Korisnik findByKorisnickoIme(String korisnickoIme)
     {
         return this.korisnikRepository.findByKorisnickoIme(korisnickoIme);
@@ -29,7 +29,7 @@ public class KorisnikService {
     }
 
     public Korisnik login(String mail, String lozinka) {
-        Korisnik korisnik = korisnikRepository.getByMail(mail);
+        Korisnik korisnik = korisnikRepository.findByMail(mail);
         if(korisnik == null || !korisnik.getLozinka().equals(lozinka))
             return null;
         return  korisnik;

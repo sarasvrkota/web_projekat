@@ -7,7 +7,10 @@ import com.Projekat_Web.Projekat_Web.dto.PolicaDto;
 import com.Projekat_Web.Projekat_Web.entity.Knjiga;
 import com.Projekat_Web.Projekat_Web.entity.Korisnik;
 import com.Projekat_Web.Projekat_Web.entity.Polica;
+import com.Projekat_Web.Projekat_Web.entity.StavkaPolice;
 import com.Projekat_Web.Projekat_Web.service.KorisnikService;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,9 +18,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @CrossOrigin
 @RestController
@@ -26,14 +31,27 @@ public class KorisnikRestController {
     @Autowired
     private KorisnikService korisnikService;
 
+
     @PostMapping(value = "/registracija",consumes = MediaType.APPLICATION_JSON_VALUE,
-                produces = MediaType.APPLICATION_JSON_VALUE)
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @JsonIgnoreProperties(value = {"lozinka", "potvrdaLozinke"})
     public ResponseEntity<KorisnikDto> napraviKorisnika(@RequestBody KorisnikDto korisnikDto) throws Exception {
 
+        if (korisnikService.findByMail(korisnikDto.getMail()) != null) {
+            throw new Exception("Adresa mora biti jedinstvena - korisnik vec postoji");
+        }
+
+        if (korisnikService.findByKorisnickoIme(korisnikDto.getKorisnickoIme()) != null) {
+            throw new Exception("Korisnicko ime vec postoji!!!");
+        }
+
+        if (!korisnikDto.getLozinka().equals(korisnikDto.getPotvrdaLozinke())) {
+            throw new Exception("Neispravna lozinka!!!");
+        }
 
         Korisnik korisnik = new Korisnik(korisnikDto.getIme(),
                 korisnikDto.getPrezime(), korisnikDto.getKorisnickoIme(), korisnikDto.getMail(), korisnikDto.getLozinka(),
-                korisnikDto.getDatumRodjenja(), korisnikDto.getProfilnaSlika(), korisnikDto.getOpis(), korisnikDto.getUloga());
+                korisnikDto.getPotvrdaLozinke());
 
 
 
@@ -41,9 +59,9 @@ public class KorisnikRestController {
 
 
         KorisnikDto noviKorisnikDto = new KorisnikDto(noviKorisnik.getId(), noviKorisnik.getIme(), noviKorisnik.getPrezime(),
-                noviKorisnik.getMail(), noviKorisnik.getDatumRodjenja(), noviKorisnik.getProfilnaSlika(),
+                noviKorisnik.getMail(), noviKorisnik.getKorisnickoIme(), noviKorisnik.getDatumRodjenja(), noviKorisnik.getProfilnaSlika(),
                 noviKorisnik.getOpis(), noviKorisnik.getUloga());
-         // videti sa sarom sta da prosledjujemo korisniku
+        // videti sa sarom sta da prosledjujemo korisniku
 
         return new ResponseEntity<>(noviKorisnikDto, HttpStatus.CREATED);
 
@@ -135,6 +153,44 @@ public class KorisnikRestController {
 
         return ResponseEntity.ok(policeDto);
     }*/
+
+    @GetMapping("/police/{korisnikId}")
+    public ResponseEntity<List<KnjigaDto>> getPoliceKorisnika(@PathVariable String korisnikId) {
+       // List<Knjiga> knjige = korisnikService.pregledajPoliceKorisnika(korisnikId);
+
+        Optional<Korisnik> optionalKorisnik = korisnikService.findById(Long.valueOf(korisnikId));
+        if (optionalKorisnik.isPresent()) {
+            Korisnik korisnik = optionalKorisnik.get();
+            Set<Polica> police = korisnik.getPolice();
+            List<Knjiga> knjige = new ArrayList<>();
+            List<KnjigaDto> dtos = new ArrayList<>();
+
+            for (Polica polica : police) {
+                Set<StavkaPolice> stavke = polica.getStavkaPolice();
+                for (StavkaPolice stavka : stavke) {
+                    Knjiga knjiga = stavka.getKnjiga();
+                    knjige.add(knjiga);
+                    KnjigaDto dto = new KnjigaDto(stavka.getKnjiga());
+                    dtos.add(dto);
+                }
+
+            }
+
+            return new ResponseEntity<>(dtos, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+ /*   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> napraviAutora() {
+
+
+
+
+    }
+*/
 
 
 }

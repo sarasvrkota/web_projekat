@@ -2,9 +2,7 @@ package com.Projekat_Web.Projekat_Web.controller;
 
 import com.Projekat_Web.Projekat_Web.dto.KnjigaDto;
 import com.Projekat_Web.Projekat_Web.dto.KorisnikDto;
-import com.Projekat_Web.Projekat_Web.entity.Knjiga;
-import com.Projekat_Web.Projekat_Web.entity.Korisnik;
-import com.Projekat_Web.Projekat_Web.entity.Zanr;
+import com.Projekat_Web.Projekat_Web.entity.*;
 import com.Projekat_Web.Projekat_Web.service.KnjigaService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,11 +68,12 @@ public class KnjigaRestController {
 
         }
         if(knjigaDtos.isEmpty()) {
-
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(knjigaDtos, HttpStatus.OK);
 
     }
+
+
 
 }
