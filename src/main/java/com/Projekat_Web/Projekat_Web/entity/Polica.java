@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.io.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 @Entity
 @Getter @Setter @ToString
@@ -26,7 +27,10 @@ public class Polica implements Serializable {
     @Column(name = "stavka")
     private Set<StavkaPolice> stavkaPolice = new HashSet<>();
 
-
+    public Polica(String naziv, boolean primarna){
+        this.naziv = naziv;
+        this.primarna = primarna;
+    }
 
 
 

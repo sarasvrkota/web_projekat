@@ -25,6 +25,12 @@ public class StavkaPolice implements Serializable {
     @JoinColumn(name = "recenzija_id", referencedColumnName = "id")
     private Recenzija recenzija;
 
+    public StavkaPolice(Knjiga knjiga, Recenzija recenzija) {
+        this.knjiga = knjiga;
+        this.recenzija = recenzija;
+    }
+
+
 /*    @ManyToOne(fetch = FetchType.LAZY)
     private Polica polica;*/
 

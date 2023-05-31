@@ -3,6 +3,7 @@ package com.Projekat_Web.Projekat_Web.service;
 import com.Projekat_Web.Projekat_Web.entity.Korisnik;
 import com.Projekat_Web.Projekat_Web.repository.KorisnikRepository;
 import com.Projekat_Web.Projekat_Web.repository.KorisnikRepository;
+import com.Projekat_Web.Projekat_Web.repository.PolicaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,9 @@ public class KorisnikService {
 
     @Autowired
     private KorisnikRepository korisnikRepository;
+
+    @Autowired
+    private PolicaRepository policaRepository;
 
     public Korisnik save(Korisnik korisnik)
     {

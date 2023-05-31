@@ -15,6 +15,9 @@ import java.util.Set;
 public class Korisnik implements Serializable {
 
 
+    public void setPolica(Polica polica) {
+    }
+
     public enum Uloga {CITALAC, AUTOR, ADMINISTRATOR}
 
     @Id
