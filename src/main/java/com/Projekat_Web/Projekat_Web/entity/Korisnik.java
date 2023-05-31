@@ -72,6 +72,20 @@ public class Korisnik implements Serializable {
         this.opis = opis;
         this.uloga = uloga;
     }
+
+    public Korisnik(String ime, String prezime, String korisnickoIme, String mail,
+                    String lozinka, LocalDate datumRodjenja, String profilnaSlika, String opis)
+    {
+        this.ime = ime;
+        this. prezime = prezime;
+        this.korisnickoIme = korisnickoIme;
+        this.mail = mail;
+        this.lozinka = lozinka;
+        this.datumRodjenja = datumRodjenja;
+        this.profilnaSlika = profilnaSlika;
+        this.opis = opis;
+
+    }
     public Korisnik() {}
 
    /* public Korisnik(String ime, String prezime, String mail, LocalDate datumRodjenja, String profilnaSlika,

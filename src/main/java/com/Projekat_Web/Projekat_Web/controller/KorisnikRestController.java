@@ -179,15 +179,15 @@ public class KorisnikRestController {
         if(korisnikk.getUloga() != Korisnik.Uloga.CITALAC){
             return new ResponseEntity(HttpStatus.FORBIDDEN);
         }
-        Polica polica1 = new Polica("Want to Read", true);
+        Polica polica1 = new Polica("Want to Read", true, new HashSet<>());
         korisnikk.getPolice().add(polica1);
         policaService.save(polica1);
 
-        Polica polica2 = new Polica("Currently Reading", true);
+        Polica polica2 = new Polica("Currently Reading", true, new HashSet<>());
         policaService.save(polica2);
         korisnikk.getPolice().add(polica2);
 
-        Polica polica3 = new Polica("Read", true);
+        Polica polica3 = new Polica("Read", true, new HashSet<>());
         policaService.save(polica3);
         korisnikk.getPolice().add(polica3);
         korisnikService.save(korisnikk);
@@ -202,7 +202,6 @@ public class KorisnikRestController {
     @PostMapping("/dodavanje-polica")
     public ResponseEntity<String> dodajPolicu(@RequestParam(value = "naziv") String naziv, HttpSession session){
 
-
         if(naziv.equals("")){
             return new ResponseEntity<>("Naziv nije validan!", HttpStatus.BAD_REQUEST);
         }
@@ -215,15 +214,14 @@ public class KorisnikRestController {
                 return new ResponseEntity<>( "Polica sa ovim nazivom vec postoji!",HttpStatus.FORBIDDEN);
             }
         }
-        Polica polica = new Polica(naziv, false);
+        Polica polica = new Polica(naziv, false, new HashSet<>());
+        policaService.save(polica);
         prijavljeniKorisnik.getPolice().add(polica);
         korisnikService.save(prijavljeniKorisnik);
-
 
         return new ResponseEntity<String>("kreirano", HttpStatus.CREATED);
     }
 
-/*
     @PostMapping("/dodaj-knjigu-na-policu")
     public ResponseEntity<String> dodajKnjiguNaPolicu(@RequestParam(value = "policaNaziv") String policaNaziv, @RequestParam(value = "knjigaNaslov") String knjigaNaslov, HttpSession session) {
         // Provera validnosti
@@ -301,13 +299,17 @@ public class KorisnikRestController {
         }
 
         // Ažuriranje podataka korisnika
-        prijavljeniKorisnik.setIme(korisnikDTO.getIme());
+     /*   prijavljeniKorisnik.setIme(korisnikDTO.getIme());
         prijavljeniKorisnik.setPrezime(korisnikDTO.getPrezime());
         prijavljeniKorisnik.setKorisnickoIme(korisnikDTO.getKorisnickoIme());
         prijavljeniKorisnik.setMail(korisnikDTO.getMail());
         prijavljeniKorisnik.setDatumRodjenja(korisnikDTO.getDatumRodjenja());
         prijavljeniKorisnik.setProfilnaSlika(korisnikDTO.getProfilnaSlika());
-        prijavljeniKorisnik.setOpis(korisnikDTO.getOpis());
+        prijavljeniKorisnik.setOpis(korisnikDTO.getOpis());*/
+
+        /*Korisnik korisnik = new Korisnik(korisnikDto.getIme(),
+                korisnikDto.getPrezime(), korisnikDto.getKorisnickoIme(), korisnikDto.getMail(), korisnikDto.getLozinka(),
+                korisnikDto.getPotvrdaLozinke());*/
 
         // Provera da li je uneta nova lozinka i ažuriranje lozinke ako je uneta
         String novaLozinka = korisnikDTO.getLozinka();
@@ -369,7 +371,7 @@ public class KorisnikRestController {
         novaStavka.setRecenzija(novaRecenzija); // Postavite recenziju na stavku
 
         return new ResponseEntity<>("Knjiga uspesno dodata na policu!", HttpStatus.OK);
-    }*/
+    }
 }
 
 

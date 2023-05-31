@@ -27,10 +27,16 @@ public class Polica implements Serializable {
     @Column(name = "stavka")
     private Set<StavkaPolice> stavkaPolice = new HashSet<>();
 
+    public Polica(String naziv, boolean primarna, Set<StavkaPolice> stavkaPolice){
+        this.naziv = naziv;
+        this.primarna = primarna;
+        this.stavkaPolice = stavkaPolice;
+    }
     public Polica(String naziv, boolean primarna){
         this.naziv = naziv;
         this.primarna = primarna;
     }
+    public Polica(){}
 
 
 
