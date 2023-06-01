@@ -117,4 +117,19 @@ public class KorisnikDto {
         this.opis = opis;
         this.uloga = uloga;
     }*/
+
+    public KorisnikDto(String ime, String prezime, String korisnickoIme, String mail, String lozinka, LocalDate datumRodjenja,
+                       String profilnaSlika, String opis)
+    {
+
+        this.ime = ime;
+        this.prezime = prezime;
+        this.mail = mail;
+        this.lozinka = lozinka;
+        this.korisnickoIme = korisnickoIme;
+        this.datumRodjenja = datumRodjenja;
+        this.profilnaSlika = profilnaSlika;
+        this.opis = opis;
+
+    }
 }

@@ -285,31 +285,29 @@ public class KorisnikRestController {
 
 
     @PostMapping("/azuriraj-profil")
-    public ResponseEntity<String> azurirajProfil(@RequestBody KorisnikDto korisnikDTO, @RequestBody LoginDto loginDTO, HttpSession session) {
+    public ResponseEntity<String> azurirajProfil(@RequestBody KorisnikDto korisnikDTO,  HttpSession session) {
         // Provera da li je korisnik prijavljen
         Korisnik prijavljeniKorisnik = (Korisnik) session.getAttribute("korisnik");
         if (prijavljeniKorisnik == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-
+        LoginDto l = new LoginDto(prijavljeniKorisnik.getMail(), prijavljeniKorisnik.getLozinka());
+        potvrdiLozinku(l, session);
         // Provera da li je uneta trenutna lozinka ispravna
-        String trenutnaLozinka = loginDTO.getLozinka();
+     /*   String trenutnaLozinka = loginDTO.getLozinka();
         if (!trenutnaLozinka.equals(prijavljeniKorisnik.getLozinka())) {
             return new ResponseEntity<>("Trenutna lozinka nije ispravna!", HttpStatus.BAD_REQUEST);
-        }
+        }*/
 
         // Ažuriranje podataka korisnika
-     /*   prijavljeniKorisnik.setIme(korisnikDTO.getIme());
+        prijavljeniKorisnik.setIme(korisnikDTO.getIme());
         prijavljeniKorisnik.setPrezime(korisnikDTO.getPrezime());
         prijavljeniKorisnik.setKorisnickoIme(korisnikDTO.getKorisnickoIme());
         prijavljeniKorisnik.setMail(korisnikDTO.getMail());
+        prijavljeniKorisnik.setLozinka(korisnikDTO.getLozinka());
         prijavljeniKorisnik.setDatumRodjenja(korisnikDTO.getDatumRodjenja());
         prijavljeniKorisnik.setProfilnaSlika(korisnikDTO.getProfilnaSlika());
-        prijavljeniKorisnik.setOpis(korisnikDTO.getOpis());*/
-
-        /*Korisnik korisnik = new Korisnik(korisnikDto.getIme(),
-                korisnikDto.getPrezime(), korisnikDto.getKorisnickoIme(), korisnikDto.getMail(), korisnikDto.getLozinka(),
-                korisnikDto.getPotvrdaLozinke());*/
+        prijavljeniKorisnik.setOpis(korisnikDTO.getOpis());
 
         // Provera da li je uneta nova lozinka i ažuriranje lozinke ako je uneta
         String novaLozinka = korisnikDTO.getLozinka();
@@ -321,6 +319,23 @@ public class KorisnikRestController {
         korisnikService.save(prijavljeniKorisnik);
 
         return new ResponseEntity<>("Profil uspešno ažuriran!", HttpStatus.OK);
+
+    }
+
+    @PostMapping("/potvrda-lozinke")
+    public ResponseEntity<String> potvrdiLozinku(@RequestBody LoginDto loginDTO,  HttpSession session) {
+        // Provera da li je korisnik prijavljen
+        Korisnik prijavljeniKorisnik = (Korisnik) session.getAttribute("korisnik");
+        if (prijavljeniKorisnik == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        // Provera da li je uneta trenutna lozinka ispravna
+        String trenutnaLozinka = loginDTO.getLozinka();
+        if (!trenutnaLozinka.equals(prijavljeniKorisnik.getLozinka())) {
+            return new ResponseEntity<>("Trenutna lozinka nije ispravna!", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("Ispravna lozinka!", HttpStatus.OK);
 
     }
 
@@ -340,9 +355,9 @@ public class KorisnikRestController {
 
         // Pronalaženje knjige koju želimo da dodamo na policu
         Knjiga knjiga = knjigaService.findByNaslov(knjigaNaslov);
-        if (knjiga == null) {
+      /*  if (knjiga == null) {
             return new ResponseEntity<>("Knjiga ne postoji!", HttpStatus.NOT_FOUND);
-        }
+        }*/
 
         // Pronalaženje "Read" police korisnika
         Polica readPolica = null;
@@ -353,14 +368,15 @@ public class KorisnikRestController {
             }
         }
 
-        if (readPolica == null) {
+       /* if (readPolica == null) {
             return new ResponseEntity<>("Read polica ne postoji!", HttpStatus.NOT_FOUND);
-        }
+        }*/
 
         // Dodavanje knjige na "Read" policu
         StavkaPolice novaStavka = new StavkaPolice(knjiga, null);
         readPolica.getStavkaPolice().add(novaStavka);
         policaService.save(readPolica);
+
 
         // Dodavanje recenzije na knjigu
         Recenzija novaRecenzija = new Recenzija();
@@ -373,11 +389,4 @@ public class KorisnikRestController {
         return new ResponseEntity<>("Knjiga uspesno dodata na policu!", HttpStatus.OK);
     }
 }
-
-
-
-
-
-
-
 
