@@ -1,6 +1,7 @@
 package com.Projekat_Web.Projekat_Web.service;
 
 import com.Projekat_Web.Projekat_Web.entity.Knjiga;
+import com.Projekat_Web.Projekat_Web.entity.Polica;
 import com.Projekat_Web.Projekat_Web.entity.StavkaPolice;
 import com.Projekat_Web.Projekat_Web.repository.StavkaPoliceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class StavkaPoliceService {
         return stavkaPoliceRepository.findByKnjiga(knjiga);
     }
 
-
+    public StavkaPolice save(StavkaPolice stavkaPolice)
+    {
+        return this.stavkaPoliceRepository.save(stavkaPolice);
+    }
 
 }

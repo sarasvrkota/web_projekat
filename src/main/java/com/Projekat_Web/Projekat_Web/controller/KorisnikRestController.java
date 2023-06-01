@@ -1,15 +1,9 @@
 package com.Projekat_Web.Projekat_Web.controller;
 
-import com.Projekat_Web.Projekat_Web.dto.KnjigaDto;
-import com.Projekat_Web.Projekat_Web.dto.KorisnikDto;
-import com.Projekat_Web.Projekat_Web.dto.LoginDto;
-import com.Projekat_Web.Projekat_Web.dto.PolicaDto;
+import com.Projekat_Web.Projekat_Web.dto.*;
 import com.Projekat_Web.Projekat_Web.entity.*;
 import com.Projekat_Web.Projekat_Web.repository.PolicaRepository;
-import com.Projekat_Web.Projekat_Web.service.KnjigaService;
-import com.Projekat_Web.Projekat_Web.service.KorisnikService;
-import com.Projekat_Web.Projekat_Web.service.PolicaService;
-import com.Projekat_Web.Projekat_Web.service.StavkaPoliceService;
+import com.Projekat_Web.Projekat_Web.service.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.servlet.http.HttpSession;
@@ -32,8 +26,12 @@ public class KorisnikRestController {
     private PolicaService policaService;
     @Autowired
     private KnjigaService knjigaService;
+
     @Autowired
-    private StavkaPoliceService stavkaPoliceServiceService;
+    private RecenzijaService recenzijaService;
+
+    @Autowired
+    private StavkaPoliceService stavkaPoliceService;
 
 
     @PostMapping(value = "/registracija",consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -217,13 +215,16 @@ public class KorisnikRestController {
         Polica polica = new Polica(naziv, false, new HashSet<>());
         policaService.save(polica);
         prijavljeniKorisnik.getPolice().add(polica);
+        policaService.save(polica);
         korisnikService.save(prijavljeniKorisnik);
 
         return new ResponseEntity<String>("kreirano", HttpStatus.CREATED);
     }
 
     @PostMapping("/dodaj-knjigu-na-policu")
-    public ResponseEntity<String> dodajKnjiguNaPolicu(@RequestParam(value = "policaNaziv") String policaNaziv, @RequestParam(value = "knjigaNaslov") String knjigaNaslov, HttpSession session) {
+    public ResponseEntity<String> dodajKnjiguNaPolicu(@RequestParam(value = "policaNaziv") String policaNaziv,
+                                                      @RequestParam(value = "knjigaNaslov") String knjigaNaslov,
+                                                      HttpSession session) {
         // Provera validnosti
         if (policaNaziv.equals("") || knjigaNaslov.equals("")) {
             return new ResponseEntity<>("Nije dobar unos!", HttpStatus.BAD_REQUEST);
@@ -242,7 +243,7 @@ public class KorisnikRestController {
         }
 
         // Provera da li korisnik ima odabranu policu medju svojim primarnim policama
-        Polica targetPrimarnaPolica = null;
+        Polica targetPrimarnaPolica = new Polica();
         for (Polica polica : prijavljeniKorisnik.getPolice()) {
             if (polica.getNaziv().equals(policaNaziv) && polica.isPrimarna()) {
                 targetPrimarnaPolica = polica;
@@ -251,7 +252,7 @@ public class KorisnikRestController {
         }
 
         // Provera da li korisnik ima odabranu policu medju policama koje je sam napravio
-        Polica targetSopstvenaPolica = null;
+        Polica targetSopstvenaPolica = new Polica();
         for (Polica polica : prijavljeniKorisnik.getPolice()) {
             if (polica.getNaziv().equals(policaNaziv) && !polica.isPrimarna()) {
                 targetSopstvenaPolica = polica;
@@ -263,16 +264,26 @@ public class KorisnikRestController {
             return new ResponseEntity<>("Polica ne postoji ili nije validna!", HttpStatus.NOT_FOUND);
         }
 
-        // Uklanjanje knjige sa svih polica korisnika
+      /*  // Uklanjanje knjige sa svih polica korisnika
         for (Polica polica : prijavljeniKorisnik.getPolice()) {
             polica.getStavkaPolice().removeIf(stavka -> stavka.getKnjiga().equals(knjiga));
             policaService.save(polica);
-        }
+        }*/
 
         // Dodavanje knjige na ciljanu policu
         if (targetPrimarnaPolica != null) {
             StavkaPolice novaStavka = new StavkaPolice(knjiga, null);
+            if(targetPrimarnaPolica.getNaziv().equals("Read")) {
+                RecenzijaDto novaRecenzijaDto = new RecenzijaDto();
+                dodajRecenzijuNaRead(novaRecenzijaDto);
+                Recenzija recenzija = new Recenzija(novaRecenzijaDto.getOcena(), novaRecenzijaDto.getTekst(),
+                                        novaRecenzijaDto.getDatumRecenzije(), prijavljeniKorisnik);
+                recenzijaService.save(recenzija);
+                novaStavka.setRecenzija(recenzija);
+                stavkaPoliceService.save(novaStavka);
+            }
             targetPrimarnaPolica.getStavkaPolice().add(novaStavka);
+            stavkaPoliceService.save(novaStavka);
             policaService.save(targetPrimarnaPolica);
         } else if (targetSopstvenaPolica != null) {
             StavkaPolice novaStavka = new StavkaPolice(knjiga, null);
@@ -283,9 +294,20 @@ public class KorisnikRestController {
         return new ResponseEntity<>("Knjiga uspešno dodata na policu!", HttpStatus.OK);
     }
 
+    @PostMapping("/dodavanje-recenzije-read")
+    public ResponseEntity<String> dodajRecenzijuNaRead(@RequestBody RecenzijaDto novaRecenzijaDTO) {
 
+        Recenzija novaRecenzija = new Recenzija();
+        novaRecenzija.setOcena(novaRecenzijaDTO.getOcena()); // Postavite željenu ocenu
+        novaRecenzija.setTekst(novaRecenzijaDTO.getTekst()); // Postavite željeni tekst recenzije
+        novaRecenzija.setDatumRecenzije(new Date());
+        recenzijaService.save(novaRecenzija);
+        //novaRecenzija.setKorisnik(prijavljeniKorisnik);
+        //novaStavka.setRecenzija(novaRecenzija); // Postavite recenziju na stavku
+        return new ResponseEntity<>("Uspesno dodata recenzija!", HttpStatus.OK);
+    }
     @PostMapping("/azuriraj-profil")
-    public ResponseEntity<String> azurirajProfil(@RequestBody KorisnikDto korisnikDTO,  HttpSession session) {
+    public ResponseEntity<String> azurirajProfil(@RequestBody KorisnikDto korisnikDTO, HttpSession session) {
         // Provera da li je korisnik prijavljen
         Korisnik prijavljeniKorisnik = (Korisnik) session.getAttribute("korisnik");
         if (prijavljeniKorisnik == null) {
@@ -308,6 +330,7 @@ public class KorisnikRestController {
         prijavljeniKorisnik.setDatumRodjenja(korisnikDTO.getDatumRodjenja());
         prijavljeniKorisnik.setProfilnaSlika(korisnikDTO.getProfilnaSlika());
         prijavljeniKorisnik.setOpis(korisnikDTO.getOpis());
+
 
         // Provera da li je uneta nova lozinka i ažuriranje lozinke ako je uneta
         String novaLozinka = korisnikDTO.getLozinka();
@@ -340,9 +363,11 @@ public class KorisnikRestController {
     }
 
 
+
     @PostMapping("/dodaj-knjigu-na-policu-read")
     public ResponseEntity<String> dodajKnjiguNaPolicuRead(@RequestParam(value = "policaNaziv") String naziv, @RequestParam(value = "knjigaNaslov") String knjigaNaslov, HttpSession session) {
         // Provera da li su podaci validni
+
         if (naziv.isEmpty() || knjigaNaslov.isEmpty()) {
             return new ResponseEntity<>("Nije dobar unos!", HttpStatus.BAD_REQUEST);
         }

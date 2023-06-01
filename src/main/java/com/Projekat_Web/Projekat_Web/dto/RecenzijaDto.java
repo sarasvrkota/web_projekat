@@ -31,4 +31,12 @@ public class RecenzijaDto {
         this.datumRecenzije = recenzija.getDatumRecenzije();
         this.korisnik = recenzija.getKorisnik();
     }
+
+    public RecenzijaDto() {}
+
+    public RecenzijaDto(double ocena, String tekst, Date datumRecenzije) {
+        this.ocena = ocena;
+        this.tekst = tekst;
+        this.datumRecenzije = datumRecenzije;
+    }
 }
