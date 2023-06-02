@@ -264,6 +264,7 @@ public class KorisnikRestController {
             return new ResponseEntity<>("Polica ne postoji ili nije validna!", HttpStatus.NOT_FOUND);
         }
 
+
       /*  // Uklanjanje knjige sa svih polica korisnika
         for (Polica polica : prijavljeniKorisnik.getPolice()) {
             polica.getStavkaPolice().removeIf(stavka -> stavka.getKnjiga().equals(knjiga));
@@ -273,15 +274,6 @@ public class KorisnikRestController {
         // Dodavanje knjige na ciljanu policu
         if (targetPrimarnaPolica != null) {
             StavkaPolice novaStavka = new StavkaPolice(knjiga, null);
-            if(targetPrimarnaPolica.getNaziv().equals("Read")) {
-                RecenzijaDto novaRecenzijaDto = new RecenzijaDto();
-                dodajRecenzijuNaRead(novaRecenzijaDto);
-                Recenzija recenzija = new Recenzija(novaRecenzijaDto.getOcena(), novaRecenzijaDto.getTekst(),
-                                        novaRecenzijaDto.getDatumRecenzije(), prijavljeniKorisnik);
-                recenzijaService.save(recenzija);
-                novaStavka.setRecenzija(recenzija);
-                stavkaPoliceService.save(novaStavka);
-            }
             targetPrimarnaPolica.getStavkaPolice().add(novaStavka);
             stavkaPoliceService.save(novaStavka);
             policaService.save(targetPrimarnaPolica);
@@ -294,6 +286,29 @@ public class KorisnikRestController {
         return new ResponseEntity<>("Knjiga uspešno dodata na policu!", HttpStatus.OK);
     }
 
+    @PostMapping("/dodaj-recenziju-na-read/{policaId}/{naslov}")
+    public ResponseEntity<String> dodajRecenzijuNaRead(@PathVariable Long policaId, @PathVariable String naslov,
+                                                       @RequestBody RecenzijaDto recenzijaDto, HttpSession session) {
+        // Provera da li je korisnik prijavljen
+        Korisnik prijavljeniKorisnik = (Korisnik) session.getAttribute("korisnik");
+        if (prijavljeniKorisnik == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        Polica targetPolica = policaService.findById(policaId);
+        Knjiga targetKnjiga = knjigaService.findByNaslov(naslov);
+        // Provera da li je pronađena polica "Read"
+        if (targetPolica == null) {
+            return new ResponseEntity<>("Polica 'Read' ne postoji!", HttpStatus.NOT_FOUND);
+        }
+
+        // Dodavanje recenzije na policu "Read"
+        Recenzija novaRecenzija = new Recenzija(recenzijaDto.getOcena(), recenzijaDto.getTekst(), recenzijaDto.getDatumRecenzije(), prijavljeniKorisnik);
+        targetPolica.getStavkaPolice().forEach(stavka -> stavka.setRecenzija(novaRecenzija));
+        recenzijaService.save(novaRecenzija);
+        policaService.save(targetPolica);
+
+        return new ResponseEntity<>("Recenzija uspešno dodata na policu 'Read'!", HttpStatus.OK);
+    }
     @PostMapping("/dodavanje-recenzije-read")
     public ResponseEntity<String> dodajRecenzijuNaRead(@RequestBody RecenzijaDto novaRecenzijaDTO) {
 
@@ -364,54 +379,6 @@ public class KorisnikRestController {
 
 
 
-    @PostMapping("/dodaj-knjigu-na-policu-read")
-    public ResponseEntity<String> dodajKnjiguNaPolicuRead(@RequestParam(value = "policaNaziv") String naziv, @RequestParam(value = "knjigaNaslov") String knjigaNaslov, HttpSession session) {
-        // Provera da li su podaci validni
 
-        if (naziv.isEmpty() || knjigaNaslov.isEmpty()) {
-            return new ResponseEntity<>("Nije dobar unos!", HttpStatus.BAD_REQUEST);
-        }
-
-        // Provera da li je korisnik prijavljen
-        Korisnik prijavljeniKorisnik = (Korisnik) session.getAttribute("korisnik");
-        if (prijavljeniKorisnik == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-
-        // Pronalaženje knjige koju želimo da dodamo na policu
-        Knjiga knjiga = knjigaService.findByNaslov(knjigaNaslov);
-      /*  if (knjiga == null) {
-            return new ResponseEntity<>("Knjiga ne postoji!", HttpStatus.NOT_FOUND);
-        }*/
-
-        // Pronalaženje "Read" police korisnika
-        Polica readPolica = null;
-        for (Polica polica : prijavljeniKorisnik.getPolice()) {
-            if (polica.getNaziv().equals("Read")) {
-                readPolica = polica;
-                break;
-            }
-        }
-
-       /* if (readPolica == null) {
-            return new ResponseEntity<>("Read polica ne postoji!", HttpStatus.NOT_FOUND);
-        }*/
-
-        // Dodavanje knjige na "Read" policu
-        StavkaPolice novaStavka = new StavkaPolice(knjiga, null);
-        readPolica.getStavkaPolice().add(novaStavka);
-        policaService.save(readPolica);
-
-
-        // Dodavanje recenzije na knjigu
-        Recenzija novaRecenzija = new Recenzija();
-        novaRecenzija.setOcena(0); // Postavite željenu ocenu
-        novaRecenzija.setTekst(""); // Postavite željeni tekst recenzije
-        novaRecenzija.setDatumRecenzije(new Date());
-        novaRecenzija.setKorisnik(prijavljeniKorisnik);
-        novaStavka.setRecenzija(novaRecenzija); // Postavite recenziju na stavku
-
-        return new ResponseEntity<>("Knjiga uspesno dodata na policu!", HttpStatus.OK);
-    }
 }
 
