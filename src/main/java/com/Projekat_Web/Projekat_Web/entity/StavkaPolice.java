@@ -30,6 +30,7 @@ public class StavkaPolice implements Serializable {
         this.recenzija = recenzija;
     }
 
+    public StavkaPolice() {}
 
 /*    @ManyToOne(fetch = FetchType.LAZY)
     private Polica polica;*/

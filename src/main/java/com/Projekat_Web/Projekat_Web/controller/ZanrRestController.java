@@ -27,7 +27,7 @@ public class ZanrRestController {
         private ZanrService zanrService;
 
 
-        @GetMapping(value = "/svizanrovi",produces = MediaType.APPLICATION_JSON_VALUE)
+        @GetMapping(value = "/svi-zanrovi",produces = MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity<List<ZanrDto>> getSviZanrovi()
         {
             List<Zanr> zanrovi = new ArrayList<>();

@@ -18,4 +18,6 @@ public interface KnjigaRepository extends JpaRepository<Knjiga, Long> {
     //List<Knjiga> findByNaslovContainingIgnoreCase(String naziv);
 
      List<Knjiga> findAll();
+
+     Knjiga getByNaslov(String naslov);
 }

@@ -13,17 +13,17 @@ INSERT INTO autor (je_aktivan, korisnikk_id) VALUES (1, 3);
 
 
 
-INSERT INTO knjiga(naslov, naslovna_fotografija, isbn, datum_objavljivanja, broj_strana, opis, ocena, zanr) VALUES ( 'C++ PROGRAMSKI JEZIK', ' ', '978-93-96055-02-6', '2019-07-11', ' 999', 'Osnove objekno-orijentisanog programiranja kroz programski jezik C++', 5 , 'strucna literatura' );
-INSERT INTO knjiga(naslov, naslovna_fotografija, isbn, datum_objavljivanja, broj_strana, opis, ocena, zanr) VALUES ('EXCEL ZA POCETNIKE', ' ', '978-92-95055-02-5', '2002-09-04', ' 103', 'Osnovni pojmovi', 3 , 'internet i racunari' );
+INSERT INTO knjiga(naslov, naslovna_fotografija, isbn, datum_objavljivanja, broj_strana, opis, ocena, zanr) VALUES ( 'Sara', ' ', '978-93-96055-02-6', '2019-07-11', ' 999', 'Osnove objekno-orijentisanog programiranja kroz programski jezik C++', 5 , 'strucna literatura' );
+INSERT INTO knjiga(naslov, naslovna_fotografija, isbn, datum_objavljivanja, broj_strana, opis, ocena, zanr) VALUES ('Iva', ' ', '978-92-95055-02-5', '2002-09-04', ' 103', 'Osnovni pojmovi', 3 , 'internet i racunari' );
 INSERT INTO knjiga(naslov, naslovna_fotografija, isbn, datum_objavljivanja, broj_strana, opis, ocena, zanr) VALUES ('Teorija grafova', ' ', '978-94-94055-02-4', '2015-11-03', ' 155', 'osnovni pojmovi teorije grafova i reseni zadaci', 2.5 , 'internet i racunari' );
 
 
-INSERT INTO autor_spisak_knjiga(autor_korisnikk_id, spisak_knjiga_naslov) VALUES(1, 'C++ PROGRAMSKI JEZIK');
-INSERT INTO autor_spisak_knjiga(autor_korisnikk_id, spisak_knjiga_naslov) VALUES(1, 'EXCEL ZA POCETNIKE');
+INSERT INTO autor_spisak_knjiga(autor_korisnikk_id, spisak_knjiga_naslov) VALUES(1, 'Sara');
+INSERT INTO autor_spisak_knjiga(autor_korisnikk_id, spisak_knjiga_naslov) VALUES(1, 'Iva');
 
 INSERT INTO recenzija (ocena, tekst, datum_recenzije, korisnik_id) VALUES (5, 'odlicna', '2019-03-03', 4);
 
-INSERT INTO stavka_police(recenzija_id, knjiga_id) VALUES (1, 'EXCEL ZA POCETNIKE');
+INSERT INTO stavka_police(recenzija_id, knjiga_id) VALUES (1, 'Iva');
 
 INSERT INTO polica (naziv, primarna) VALUES ('polica1', 1);
 INSERT INTO polica (naziv, primarna) VALUES ('Want to Read', 1);

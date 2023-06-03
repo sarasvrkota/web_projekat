@@ -16,6 +16,9 @@ public class StavkaPoliceService {
     @Autowired
     private StavkaPoliceRepository stavkaPoliceRepository;
 
+   /* public List<StavkaPolice> findByKnjiga(Knjiga knjiga) {
+        return stavkaPoliceRepository.findByKnjiga(knjiga);
+    }*/
     public Optional<StavkaPolice> findByKnjiga(Knjiga knjiga) {
         return stavkaPoliceRepository.findByKnjiga(knjiga);
     }

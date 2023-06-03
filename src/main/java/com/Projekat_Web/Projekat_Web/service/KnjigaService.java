@@ -37,6 +37,11 @@ public class KnjigaService {
         return knjigaRepository.findByNaslov(naslov);
     }
 
+    public Knjiga getByNaslov(String naslov) {
+        return knjigaRepository.getByNaslov(naslov);
+
+    }
+
 
 
 

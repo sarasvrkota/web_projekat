@@ -11,7 +11,6 @@ public interface PolicaRepository extends JpaRepository<Polica, Long> {
     public Polica save(Polica polica);
     public Polica findByNaziv(String naziv);
 
-    public  Polica findByNaslov(String naslov);
 
     public Optional<Polica> findById(Long policaId);
 }

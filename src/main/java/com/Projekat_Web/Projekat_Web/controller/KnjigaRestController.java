@@ -46,8 +46,26 @@ public class KnjigaRestController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(knjigaDtos, HttpStatus.OK);
-
     }
+
+    @GetMapping(value = "/prikaz-knjige/{naslov}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<KnjigaDto> getKnjiga(@PathVariable String naslov) {
+
+        Knjiga knjiga = knjigaService.getByNaslov(naslov);
+
+
+        if(knjiga == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        KnjigaDto knjigaDto = new KnjigaDto(knjiga);
+
+        return new ResponseEntity<>(knjigaDto, HttpStatus.OK);
+    }
+
+
+
+
 
     @GetMapping(value = "/sveknjige",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<KnjigaDto>> getSveKnjige()

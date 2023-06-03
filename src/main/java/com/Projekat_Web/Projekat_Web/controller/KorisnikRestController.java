@@ -34,9 +34,14 @@ public class KorisnikRestController {
     private StavkaPoliceService stavkaPoliceService;
 
 
+    @GetMapping("/pocetna-stranica")
+    public String welcome(){
+        return "Dobrodosli na stranicu!";
+    }
+
+
     @PostMapping(value = "/registracija",consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @JsonIgnoreProperties(value = {"lozinka", "potvrdaLozinke"})
     public ResponseEntity<KorisnikDto> napraviKorisnika(@RequestBody KorisnikDto korisnikDto) throws Exception {
 
         if (korisnikService.findByMail(korisnikDto.getMail()) != null) {
@@ -69,26 +74,7 @@ public class KorisnikRestController {
 
     }
 
-   @GetMapping(value= "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<KorisnikDto> getKorisnik(@PathVariable Long id)
-    {
-        /*if(uloga.equals("AUTOR"))
-        {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }*/
-        Optional<Korisnik> optKorisnik = this.korisnikService.findById(id);
-        Korisnik korisnik = optKorisnik.get();
 
-        KorisnikDto korisnikDto = new KorisnikDto(korisnik.getId(), korisnik.getIme(), korisnik.getPrezime(), korisnik.getKorisnickoIme(),
-                                korisnik.getMail(), korisnik.getLozinka(), korisnik.getDatumRodjenja(), korisnik.getProfilnaSlika(),
-                                korisnik.getOpis(), korisnik.getUloga());
-
-        if(korisnikDto==null)  {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(korisnikDto, HttpStatus.OK);
-    }
 
 
     @PostMapping("/login")
@@ -117,8 +103,9 @@ public class KorisnikRestController {
         return new ResponseEntity("Successfully logged out", HttpStatus.OK);
     }
 
-    @GetMapping(value = "/pretragapoimenu",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<KorisnikDto>> getKorisnik(@RequestParam(value = "ime") String ime, @RequestParam(value = "prezime") String prezime)
+    @GetMapping(value = "/pretraga-po-imenu",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<KorisnikDto>> getKorisnik(@RequestParam(value = "ime") String ime,
+                                                         @RequestParam(value = "prezime") String prezime)
     {
         List<Korisnik> korisnici = new ArrayList<Korisnik>();
 
@@ -139,6 +126,27 @@ public class KorisnikRestController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(korisnikDtos, HttpStatus.OK);
+    }
+
+    @GetMapping(value= "/prikaz-profila/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<KorisnikDto> getKorisnik(@PathVariable Long id)
+    {
+        /*if(uloga.equals("AUTOR"))
+        {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }*/
+        Optional<Korisnik> optKorisnik = this.korisnikService.findById(id);
+        Korisnik korisnik = optKorisnik.get();
+
+        KorisnikDto korisnikDto = new KorisnikDto(korisnik.getId(), korisnik.getIme(), korisnik.getPrezime(), korisnik.getKorisnickoIme(),
+                korisnik.getMail(), korisnik.getLozinka(), korisnik.getDatumRodjenja(), korisnik.getProfilnaSlika(),
+                korisnik.getOpis(), korisnik.getUloga());
+
+        if(korisnikDto==null)  {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(korisnikDto, HttpStatus.OK);
     }
 
     @GetMapping("/police/{korisnikId}")
@@ -170,7 +178,7 @@ public class KorisnikRestController {
     }
 
 
-    @PostMapping("/primarne-police")
+    @PostMapping("/dodavanje-primarnih-polica")
     public ResponseEntity<Void> dodajPrimarnePolice(Korisnik korisnik, HttpSession session){
         Optional<Korisnik> optKorisnik = this.korisnikService.findById(korisnik.getId());
         Korisnik korisnikk = optKorisnik.get();
@@ -286,7 +294,7 @@ public class KorisnikRestController {
         return new ResponseEntity<>("Knjiga uspešno dodata na policu!", HttpStatus.OK);
     }
 
-    @PostMapping("/dodaj-recenziju-na-read/{policaId}/{naslov}")
+   /* @PostMapping("/dodaj-recenziju-na-read/{policaId}/{naslov}")
     public ResponseEntity<String> dodajRecenzijuNaRead(@PathVariable Long policaId, @PathVariable String naslov,
                                                        @RequestBody RecenzijaDto recenzijaDto, HttpSession session) {
         // Provera da li je korisnik prijavljen
@@ -308,8 +316,8 @@ public class KorisnikRestController {
         policaService.save(targetPolica);
 
         return new ResponseEntity<>("Recenzija uspešno dodata na policu 'Read'!", HttpStatus.OK);
-    }
-    @PostMapping("/dodavanje-recenzije-read")
+    }*/
+  /*  @PostMapping("/dodavanje-recenzije-read")
     public ResponseEntity<String> dodajRecenzijuNaRead(@RequestBody RecenzijaDto novaRecenzijaDTO) {
 
         Recenzija novaRecenzija = new Recenzija();
@@ -320,7 +328,7 @@ public class KorisnikRestController {
         //novaRecenzija.setKorisnik(prijavljeniKorisnik);
         //novaStavka.setRecenzija(novaRecenzija); // Postavite recenziju na stavku
         return new ResponseEntity<>("Uspesno dodata recenzija!", HttpStatus.OK);
-    }
+    }*/
     @PostMapping("/azuriraj-profil")
     public ResponseEntity<String> azurirajProfil(@RequestBody KorisnikDto korisnikDTO, HttpSession session) {
         // Provera da li je korisnik prijavljen
