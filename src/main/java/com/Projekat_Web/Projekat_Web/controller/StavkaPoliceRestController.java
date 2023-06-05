@@ -63,7 +63,7 @@ public class StavkaPoliceRestController {
     public ResponseEntity<List<RecenzijaDto>> getRecenzijaZaKnjigu(@PathVariable String naslov) {
         Knjiga knjiga = knjigaService.findByNaslov(naslov);
 
-        Optional<StavkaPolice> optionalStavkaPolice = stavkaPoliceService.findByKnjiga(knjiga);
+        Optional<StavkaPolice> optionalStavkaPolice = stavkaPoliceService.findByKnjiga(knjiga);//listu stavki 
         if (optionalStavkaPolice.isPresent()) {
             StavkaPolice stavkaPolice = optionalStavkaPolice.get();
 
