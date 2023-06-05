@@ -251,17 +251,10 @@ public class KorisnikRestController {
             return new ResponseEntity<>("Ne može se obrisati primarna polica!", HttpStatus.FORBIDDEN);
         }
 
-        prijavljeniKorisnik.getPolice().remove(polica);
-        this.policaService.delete(polica);
-
-        Set<Polica> police =  new HashSet<>();
-        for(Polica p : prijavljeniKorisnik.getPolice()) {
-            if(!p.getId().equals(polica.getId())) {
-                police.add(p);
-            }
-        }
-        prijavljeniKorisnik.setPolice(police);
-        this.korisnikService.save(prijavljeniKorisnik);
+        Korisnik korisnikIzBaze = korisnikService.getById(prijavljeniKorisnik.getId());
+        korisnikIzBaze.getPolice().remove(polica);
+        korisnikService.save(korisnikIzBaze);
+        policaService.delete(polica);
 
        /* police.remove(polica);
         policaService.delete(polica);
@@ -270,9 +263,8 @@ public class KorisnikRestController {
         korisnikService.save(prijavljeniKorisnik);*/
 
 
-        //policaService.delete(polica); // Obrišite policu iz baze
 
-        return new ResponseEntity<>("Policu je uspješno obrisana", HttpStatus.OK);
+        return new ResponseEntity<>("Polica je uspešno obrisana", HttpStatus.OK);
     }
 
    /* @DeleteMapping("/police/{policaId}")

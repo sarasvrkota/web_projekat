@@ -59,13 +59,16 @@ public class StavkaPoliceRestController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }*/
 
+
+
+
     @GetMapping("/recenzije/{naslov}")
     public ResponseEntity<List<RecenzijaDto>> getRecenzijaZaKnjigu(@PathVariable String naslov) {
         Knjiga knjiga = knjigaService.findByNaslov(naslov);
 
-        Optional<StavkaPolice> optionalStavkaPolice = stavkaPoliceService.findByKnjiga(knjiga);
-        if (optionalStavkaPolice.isPresent()) {
-            StavkaPolice stavkaPolice = optionalStavkaPolice.get();
+        List<StavkaPolice> stavkePolice = stavkaPoliceService.findByKnjiga(knjiga);
+
+            //StavkaPolice stavkaPolice = optionalStavkaPolice.get();
 
             List<StavkaPolice> stavke = this.stavkaPoliceService.findAllByKnjiga(knjiga);
 
@@ -80,11 +83,15 @@ public class StavkaPoliceRestController {
                 recenzijeDto.add(dto);
             }
 
+            if(recenzijeDto.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            }
+
             return new ResponseEntity<>(recenzijeDto, HttpStatus.OK);
 
-        }
 
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        //return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 

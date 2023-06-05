@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface StavkaPoliceRepository extends JpaRepository<StavkaPolice, Long> {
 
-    Optional<StavkaPolice> findByKnjiga(Knjiga knjiga);
+    List<StavkaPolice> findByKnjiga(Knjiga knjiga);
 
     public StavkaPolice save(StavkaPolice stavkaPolice);
 
