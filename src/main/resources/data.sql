@@ -22,16 +22,20 @@ INSERT INTO autor_spisak_knjiga(autor_korisnikk_id, spisak_knjiga_naslov) VALUES
 INSERT INTO autor_spisak_knjiga(autor_korisnikk_id, spisak_knjiga_naslov) VALUES(1, 'Iva');
 
 INSERT INTO recenzija (ocena, tekst, datum_recenzije, korisnik_id) VALUES (5, 'odlicna', '2019-03-03', 4);
+INSERT INTO recenzija (ocena, tekst, datum_recenzije, korisnik_id) VALUES (3, 'odlicna', '2019-01-01', 5);
 
 INSERT INTO stavka_police(recenzija_id, knjiga_id) VALUES (1, 'Iva');
+INSERT INTO stavka_police(recenzija_id, knjiga_id) VALUES (2, 'Iva');
 
 INSERT INTO polica (naziv, primarna) VALUES ('polica1', 1);
 INSERT INTO polica (naziv, primarna) VALUES ('Want to Read', 1);
 INSERT INTO polica (naziv, primarna) VALUES ('Currently Reading', 1);
 INSERT INTO polica (naziv, primarna) VALUES ('Read', 1);
+INSERT INTO polica (naziv, primarna) VALUES ('Budina polica', 0);
 
 
 INSERT INTO korisnik_police(korisnik_korisnikk_id, police_id) VALUES (1, 1);
+INSERT INTO korisnik_police(korisnik_korisnikk_id, police_id) VALUES (5, 5);
 
 INSERT INTO polica_stavka_police(polica_id, stavka_police_id) VALUES (1, 1);
 INSERT INTO zahtev_za_aktivaciju_naloga_autora (email, telefon, poruka, datum, status, autor_korisnikk_id) VALUES ('nsdespot@gmail.com', '0645541596', 'zahtev', '2022-01-02', 'ODOBREN', 1);

@@ -13,4 +13,8 @@ public interface PolicaRepository extends JpaRepository<Polica, Long> {
 
 
     public Optional<Polica> findById(Long policaId);
+
+    public void deleteById(Long id);
+    //public void delete(Polica polica);
+    public Polica getById(Long id);
 }

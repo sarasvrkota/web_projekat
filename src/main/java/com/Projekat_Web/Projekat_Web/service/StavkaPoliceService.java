@@ -27,5 +27,6 @@ public class StavkaPoliceService {
     {
         return this.stavkaPoliceRepository.save(stavkaPolice);
     }
+    public List<StavkaPolice> findAllByKnjiga(Knjiga knjiga) { return this.stavkaPoliceRepository.findAllByKnjiga(knjiga);}
 
 }

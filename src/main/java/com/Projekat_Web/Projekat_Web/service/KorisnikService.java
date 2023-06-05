@@ -28,9 +28,10 @@ public class KorisnikService {
     {
         return this.korisnikRepository.findByKorisnickoIme(korisnickoIme);
     }
-    public Optional<Korisnik> findById(Long id){
+    public Optional<Korisnik> findById(Long id) {
         return this.korisnikRepository.findById(id);
     }
+    public Korisnik getById(Long id) { return this.korisnikRepository.getById(id);}
 
     public Korisnik login(String mail, String lozinka) {
         Korisnik korisnik = korisnikRepository.findByMail(mail);
