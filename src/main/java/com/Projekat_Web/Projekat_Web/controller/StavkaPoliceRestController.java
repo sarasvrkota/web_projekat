@@ -66,9 +66,11 @@ public class StavkaPoliceRestController {
     public ResponseEntity<List<RecenzijaDto>> getRecenzijaZaKnjigu(@PathVariable String naslov) {
         Knjiga knjiga = knjigaService.findByNaslov(naslov);
 
+
         List<StavkaPolice> stavkePolice = stavkaPoliceService.findByKnjiga(knjiga);
 
             //StavkaPolice stavkaPolice = optionalStavkaPolice.get();
+
 
             List<StavkaPolice> stavke = this.stavkaPoliceService.findAllByKnjiga(knjiga);
 

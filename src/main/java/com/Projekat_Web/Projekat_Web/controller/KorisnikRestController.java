@@ -87,8 +87,9 @@ public class KorisnikRestController {
         Korisnik ulogovaniKorisnik = korisnikService.login(loginDto.getMail(), loginDto.getLozinka());
         if (ulogovaniKorisnik == null)
             return new ResponseEntity<>("User does not exist!", HttpStatus.NOT_FOUND);
-        dodajPrimarnePolice(ulogovaniKorisnik, session);
+
         session.setAttribute("korisnik", ulogovaniKorisnik);
+        dodajPrimarnePolice(session);
         return ResponseEntity.ok("Successfully logged in!");
     }
 
@@ -179,12 +180,12 @@ public class KorisnikRestController {
 
 
     @PostMapping("/primarne-police")
-    public ResponseEntity<Void> dodajPrimarnePolice(Korisnik korisnik, HttpSession session){
-        Optional<Korisnik> optKorisnik = this.korisnikService.findById(korisnik.getId());
-        if (optKorisnik.isEmpty()) {
+    public ResponseEntity<Void> dodajPrimarnePolice(HttpSession session){
+        Korisnik optKorisnik = (Korisnik)session.getAttribute("korisnik");
+        if (optKorisnik ==  null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        Korisnik korisnikk = optKorisnik.get();
+        Korisnik korisnikk = optKorisnik;
         //this.korisnikService.save(korisnikk);
 
        /* if(korisnikk.getId() == null)
