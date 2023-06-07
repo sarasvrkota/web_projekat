@@ -65,6 +65,39 @@ public class AutorRestController {
 
     }
 
+    @PostMapping(value = "/azuriranje-knjige/{naslovKnjige}")
+    public ResponseEntity<KnjigaDto> azurirajKnjigu(@PathVariable(value = "naslovKnjige") String naslovKnjige, @RequestBody KnjigaDto knjigaDto, HttpSession session) {
+        Object imaSesiju = session.getAttribute("korisnik");
+        Korisnik prijavljeniKorisnik = (Korisnik) imaSesiju;
+
+        Knjiga knjiga = this.knjigaService.getByNaslov(naslovKnjige);
+        //knjiga.setNaslov(knjigaDto.getNaslov());
+        knjiga.setNaslovnaFotografija(knjigaDto.getNaslovnaFotografija());
+        knjiga.setISBN(knjigaDto.getISBN());
+        knjiga.setDatumObjavljivanja(knjigaDto.getDatumObjavljivanja());
+        knjiga.setBrojStrana(knjigaDto.getBrojStrana());
+        knjiga.setOpis(knjigaDto.getOpis());
+        knjiga.setZanr(knjigaDto.getZanr());
+        knjiga.setOcena(knjigaDto.getOcena());
+
+        this.knjigaService.save(knjiga);
+
+        Autor autorIzBaze = this.autorService.getById(prijavljeniKorisnik.getId());
+
+        Set<Knjiga> knjige = new HashSet<>();
+        knjige = autorIzBaze.getSpisakKnjiga();
+        knjige.add(knjiga);
+
+        autorIzBaze.setSpisakKnjiga(knjige);
+
+        this.autorService.save(autorIzBaze);
+
+        KnjigaDto knjigaDto1 = new KnjigaDto(knjiga);
+
+        return new ResponseEntity<>(knjigaDto1, HttpStatus.OK);
+
+    }
+
 
 
 
