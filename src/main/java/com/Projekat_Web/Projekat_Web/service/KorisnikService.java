@@ -1,10 +1,13 @@
 package com.Projekat_Web.Projekat_Web.service;
 
+import com.Projekat_Web.Projekat_Web.entity.Knjiga;
 import com.Projekat_Web.Projekat_Web.entity.Korisnik;
+import com.Projekat_Web.Projekat_Web.entity.Polica;
+import com.Projekat_Web.Projekat_Web.entity.StavkaPolice;
+import com.Projekat_Web.Projekat_Web.repository.*;
 import com.Projekat_Web.Projekat_Web.repository.KorisnikRepository;
-import com.Projekat_Web.Projekat_Web.repository.KorisnikRepository;
-import com.Projekat_Web.Projekat_Web.repository.PolicaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +18,12 @@ public class KorisnikService {
 
     @Autowired
     private KorisnikRepository korisnikRepository;
+
+    @Autowired
+    private KnjigaRepository knjigaRepository;
+
+    @Autowired
+    private StavkaPoliceRepository stavkaPoliceRepository;
 
     @Autowired
     private PolicaRepository policaRepository;
@@ -51,4 +60,14 @@ public class KorisnikService {
     public List<Korisnik> findByImeAndPrezime(String ime, String prezime) {
         return korisnikRepository.findByImeAndPrezime(ime, prezime);
     }
+
+
+        public Korisnik findOne(Long id){
+            Optional<Korisnik> foundKorisnik = korisnikRepository.findById(id);
+            if (foundKorisnik.isPresent()) {
+                return foundKorisnik.get();
+            }
+            return null;
+        }
+
 }

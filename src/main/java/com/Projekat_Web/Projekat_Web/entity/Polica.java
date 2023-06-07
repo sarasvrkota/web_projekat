@@ -23,7 +23,7 @@ public class Polica implements Serializable {
     @Column
     private boolean primarna;
 
-    @OneToMany( fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany( fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Column(name = "stavka")
     private Set<StavkaPolice> stavkaPolice = new HashSet<>();
 
@@ -39,5 +39,5 @@ public class Polica implements Serializable {
     public Polica(){}
 
 
-
+    //public Set<StavkaPolice> getStavkaPolice() { return this.stavkaPolice;}
 }

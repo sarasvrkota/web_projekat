@@ -15,6 +15,8 @@ import java.util.Set;
 public class Korisnik implements Serializable {
 
 
+
+
     public void setPolica(Polica polica) {
     }
 
@@ -53,7 +55,7 @@ public class Korisnik implements Serializable {
     @Column
     protected Uloga uloga;
 
-    @OneToMany(fetch =  FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch =  FetchType.EAGER, cascade = CascadeType.ALL)
     protected Set<Polica> police = new HashSet<>();
 
     protected String potvrdaLozinke;
@@ -130,6 +132,7 @@ public class Korisnik implements Serializable {
         this.mail = mail;
         this.lozinka = lozinka;
         this.potvrdaLozinke = potvrdaLozinke;
+        this.uloga = Uloga.CITALAC;
 
 
     }

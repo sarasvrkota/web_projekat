@@ -8,8 +8,8 @@ INSERT INTO zanr (naziv) VALUES ('internet i racunari');
 INSERT INTO zanr (naziv) VALUES ('edukativni');
 
 INSERT INTO autor (je_aktivan, korisnikk_id) VALUES (1, 1);
-INSERT INTO autor (je_aktivan, korisnikk_id) VALUES (1, 2);
 INSERT INTO autor (je_aktivan, korisnikk_id) VALUES (1, 3);
+INSERT INTO autor (je_aktivan, korisnikk_id) VALUES (1, 4);
 
 
 
@@ -19,7 +19,7 @@ INSERT INTO knjiga(naslov, naslovna_fotografija, isbn, datum_objavljivanja, broj
 
 
 INSERT INTO autor_spisak_knjiga(autor_korisnikk_id, spisak_knjiga_naslov) VALUES(1, 'Sara');
-INSERT INTO autor_spisak_knjiga(autor_korisnikk_id, spisak_knjiga_naslov) VALUES(1, 'Iva');
+INSERT INTO autor_spisak_knjiga(autor_korisnikk_id, spisak_knjiga_naslov) VALUES(4, 'Iva');
 
 INSERT INTO recenzija (ocena, tekst, datum_recenzije, korisnik_id) VALUES (5, 'odlicna', '2019-03-03', 4);
 INSERT INTO recenzija (ocena, tekst, datum_recenzije, korisnik_id) VALUES (3, 'odlicna', '2019-01-01', 5);

@@ -1,0 +1,71 @@
+package com.Projekat_Web.Projekat_Web.controller;
+
+import com.Projekat_Web.Projekat_Web.dto.KnjigaDto;
+import com.Projekat_Web.Projekat_Web.entity.Autor;
+import com.Projekat_Web.Projekat_Web.entity.Knjiga;
+import com.Projekat_Web.Projekat_Web.entity.Korisnik;
+import com.Projekat_Web.Projekat_Web.service.AutorService;
+import com.Projekat_Web.Projekat_Web.service.KnjigaService;
+import com.Projekat_Web.Projekat_Web.service.KorisnikService;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+
+@CrossOrigin
+@RestController
+@RequestMapping(value = "/api/autori")
+public class AutorRestController {
+
+    @Autowired
+    private AutorService autorService;
+
+    @Autowired
+    private KnjigaService knjigaService;
+
+    @Autowired
+    private KorisnikService korisnikService;
+
+
+    @PostMapping(value = "/dodavanje-knjige")
+    public ResponseEntity<KnjigaDto> dodajKnjigu(@RequestBody KnjigaDto knjigaDto, HttpSession session) throws ChangeSetPersister.NotFoundException{
+
+            Object imaSesiju = session.getAttribute("korisnik");
+            Korisnik prijavljeniKorisnik = (Korisnik) imaSesiju;
+
+
+
+            Knjiga knjiga = new Knjiga(knjigaDto.getNaslov(), knjigaDto.getNaslovnaFotografija(), knjigaDto.getISBN(),
+                    knjigaDto.getDatumObjavljivanja(), knjigaDto.getBrojStrana(), knjigaDto.getOpis(),
+                    knjigaDto.getZanr(), knjigaDto.getOcena());
+
+            this.knjigaService.save(knjiga);
+
+            Autor autorIzBaze = this.autorService.getById(prijavljeniKorisnik.getId());
+
+            Set<Knjiga> knjige = new HashSet<>();
+            knjige = autorIzBaze.getSpisakKnjiga();
+            knjige.add(knjiga);
+
+            autorIzBaze.setSpisakKnjiga(knjige);
+
+            this.autorService.save(autorIzBaze);
+
+            KnjigaDto knjigaDto1 = new KnjigaDto(knjiga);
+
+            return new ResponseEntity<>(knjigaDto1, HttpStatus.OK);
+
+
+
+    }
+
+
+
+
+}

@@ -43,7 +43,7 @@ public class KorisnikRestController {
 
     @PostMapping(value = "/registracija",consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<KorisnikDto> napraviKorisnika(@RequestBody KorisnikDto korisnikDto) throws Exception {
+    public ResponseEntity<KorisnikDto> napraviKorisnika(@RequestBody KorisnikDto korisnikDto, HttpSession session) throws Exception {
 
         if (korisnikService.findByMail(korisnikDto.getMail()) != null) {
             throw new Exception("Adresa mora biti jedinstvena - korisnik vec postoji");
@@ -60,6 +60,30 @@ public class KorisnikRestController {
         Korisnik korisnik = new Korisnik(korisnikDto.getIme(),
                 korisnikDto.getPrezime(), korisnikDto.getKorisnickoIme(), korisnikDto.getMail(), korisnikDto.getLozinka(),
                 korisnikDto.getPotvrdaLozinke());
+
+        //dodajPrimarnePolice(session);
+
+
+
+            Set<Polica> policee = new HashSet<>();
+            Polica polica1 = new Polica("Want to Read", true, new HashSet<>());
+            //korisnikk.getPolice().add(polica1);
+            policee.add(polica1);
+            policaService.save(polica1);
+
+
+            Polica polica2 = new Polica("Currently Reading", true, new HashSet<>());
+            policaService.save(polica2);
+            policee.add(polica2);
+            //korisnikk.getPolice().add(polica2);
+
+            Polica polica3 = new Polica("Read", true, new HashSet<>());
+            policee.add(polica3);
+            policaService.save(polica3);
+            //korisnikk.getPolice().add(polica3);
+
+            korisnik.setPolice(policee);
+            korisnikService.save(korisnik);
 
 
 
@@ -87,9 +111,17 @@ public class KorisnikRestController {
         Korisnik ulogovaniKorisnik = korisnikService.login(loginDto.getMail(), loginDto.getLozinka());
         if (ulogovaniKorisnik == null)
             return new ResponseEntity<>("User does not exist!", HttpStatus.NOT_FOUND);
+       /* if(ulogovaniKorisnik.getUloga() == Korisnik.Uloga.AUTOR) {
+            session.setAttribute("autor", ulogovaniKorisnik);
+        }
+
+
+        if(ulogovaniKorisnik.getUloga() == Korisnik.Uloga.AUTOR) {
+            session.setAttribute("administrator", ulogovaniKorisnik);
+        }*/
 
         session.setAttribute("korisnik", ulogovaniKorisnik);
-        dodajPrimarnePolice(session);
+        //dodajPrimarnePolice(session);
         return ResponseEntity.ok("Successfully logged in!");
     }
 
@@ -191,24 +223,33 @@ public class KorisnikRestController {
        /* if(korisnikk.getId() == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);*/
 
-        if(korisnikk.getUloga() != Korisnik.Uloga.CITALAC){
-            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        if(korisnikk.getUloga() == Korisnik.Uloga.CITALAC || korisnikk.getUloga() == Korisnik.Uloga.AUTOR) {
+
+            Set<Polica> policee = new HashSet<>();
+            Polica polica1 = new Polica("Want to Read", true, new HashSet<>());
+            //korisnikk.getPolice().add(polica1);
+            policee.add(polica1);
+            policaService.save(polica1);
+
+
+            Polica polica2 = new Polica("Currently Reading", true, new HashSet<>());
+            policaService.save(polica2);
+            policee.add(polica2);
+            //korisnikk.getPolice().add(polica2);
+
+            Polica polica3 = new Polica("Read", true, new HashSet<>());
+            policee.add(polica3);
+            policaService.save(polica3);
+            //korisnikk.getPolice().add(polica3);
+
+            korisnikk.setPolice(policee);
+            korisnikService.save(korisnikk);
+
+
+
+            return ResponseEntity.noContent().build();
         }
-        Polica polica1 = new Polica("Want to Read", true, new HashSet<>());
-        korisnikk.getPolice().add(polica1);
-        policaService.save(polica1);
-
-        Polica polica2 = new Polica("Currently Reading", true, new HashSet<>());
-        policaService.save(polica2);
-        korisnikk.getPolice().add(polica2);
-
-        Polica polica3 = new Polica("Read", true, new HashSet<>());
-        policaService.save(polica3);
-        korisnikk.getPolice().add(polica3);
-        korisnikService.save(korisnikk);
-
-        return  ResponseEntity.noContent().build();
-
+        return new ResponseEntity(HttpStatus.FORBIDDEN);
     }
 //    Korisnik ima mogućnost dodavanja drugih polica, koje kasnije može i obrisati.
 //    Korisnik može da napravi novu policu samo ukoliko već nema policu sa
@@ -220,22 +261,32 @@ public class KorisnikRestController {
         if(naziv.equals("")){
             return new ResponseEntity<>("Naziv nije validan!", HttpStatus.BAD_REQUEST);
         }
-        Korisnik prijavljeniKorisnik = (Korisnik) session.getAttribute("korisnik");
+        Korisnik korisnikk = (Korisnik) session.getAttribute("korisnik");
+        Korisnik prijavljeniKorisnik = this.korisnikService.getById(korisnikk.getId());
+        Set<Polica> p1 = new HashSet<>();
+        if(prijavljeniKorisnik.getUloga() == Korisnik.Uloga.CITALAC || prijavljeniKorisnik.getUloga() == Korisnik.Uloga.AUTOR) {
+
+
         /*if (prijavljeniKorisnik == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }*/
-        for(Polica p : prijavljeniKorisnik.getPolice()){
-            if(naziv.equals(p.getNaziv())){
-                return new ResponseEntity<>( "Polica sa ovim nazivom vec postoji!",HttpStatus.FORBIDDEN);
+            for (Polica p : prijavljeniKorisnik.getPolice()) {
+                if (naziv.equals(p.getNaziv())) {
+                    return new ResponseEntity<>("Polica sa ovim nazivom vec postoji!", HttpStatus.FORBIDDEN);
+                }
             }
-        }
-        Polica polica = new Polica(naziv, false, new HashSet<>());
-        policaService.save(polica);
-        prijavljeniKorisnik.getPolice().add(polica);
-        policaService.save(polica);
-        korisnikService.save(prijavljeniKorisnik);
+            Polica polica = new Polica(naziv, false, new HashSet<>());
+            policaService.save(polica);
+           // prijavljeniKorisnik.getPolice().add(polica);
+            p1 = prijavljeniKorisnik.getPolice();
+            p1.add(polica);
+            prijavljeniKorisnik.setPolice(p1);
+            policaService.save(polica);
+            korisnikService.save(prijavljeniKorisnik);
 
-        return new ResponseEntity<String>("kreirano", HttpStatus.CREATED);
+            return new ResponseEntity<String>("kreirano", HttpStatus.CREATED);
+        }
+        return new ResponseEntity(HttpStatus.FORBIDDEN);
     }
 
     @DeleteMapping("/police/{policaId}")
@@ -244,18 +295,21 @@ public class KorisnikRestController {
         Polica polica = policaService.getById(policaId);
         //System.out.println(prijavljeniKorisnik.getId());
 
-        if (polica == null) {
-            return new ResponseEntity<>("Policu sa datim ID-om nije moguće pronaći", HttpStatus.NOT_FOUND);
-        }
+        if(prijavljeniKorisnik.getUloga() == Korisnik.Uloga.CITALAC || prijavljeniKorisnik.getUloga() == Korisnik.Uloga.AUTOR) {
 
-        if (polica.isPrimarna()) {
-            return new ResponseEntity<>("Ne može se obrisati primarna polica!", HttpStatus.FORBIDDEN);
-        }
 
-        Korisnik korisnikIzBaze = korisnikService.getById(prijavljeniKorisnik.getId());
-        korisnikIzBaze.getPolice().remove(polica);
-        korisnikService.save(korisnikIzBaze);
-        policaService.delete(polica);
+            if (polica == null) {
+                return new ResponseEntity<>("Policu sa datim ID-om nije moguće pronaći", HttpStatus.NOT_FOUND);
+            }
+
+            if (polica.isPrimarna()) {
+                return new ResponseEntity<>("Ne može se obrisati primarna polica!", HttpStatus.FORBIDDEN);
+            }
+
+            Korisnik korisnikIzBaze = korisnikService.getById(prijavljeniKorisnik.getId());
+            korisnikIzBaze.getPolice().remove(polica);
+            korisnikService.save(korisnikIzBaze);
+            policaService.delete(polica);
 
        /* police.remove(polica);
         policaService.delete(polica);
@@ -264,8 +318,10 @@ public class KorisnikRestController {
         korisnikService.save(prijavljeniKorisnik);*/
 
 
+            return new ResponseEntity<>("Polica je uspešno obrisana", HttpStatus.OK);
 
-        return new ResponseEntity<>("Polica je uspešno obrisana", HttpStatus.OK);
+        }
+        return new ResponseEntity(HttpStatus.FORBIDDEN);
     }
 
    /* @DeleteMapping("/police/{policaId}")
@@ -309,75 +365,45 @@ public class KorisnikRestController {
     }*/
 
     @PostMapping("/dodaj-knjigu-na-policu")
-    public ResponseEntity<String> dodajKnjiguNaPolicu(@RequestParam(value = "policaNaziv") String policaNaziv,
+    public ResponseEntity<String> dodajKnjiguNaPolicu(@RequestParam(value = "policaId") Long policaId,
                                                       @RequestParam(value = "knjigaNaslov") String knjigaNaslov,
-                                                      HttpSession session) {
-        // Provera validnosti
-        if (policaNaziv.equals("") || knjigaNaslov.equals("")) {
-            return new ResponseEntity<>("Nije dobar unos!", HttpStatus.BAD_REQUEST);
-        }
+                                                      HttpSession session) throws ChangeSetPersister.NotFoundException {
+        Korisnik loggedKorisnik = (Korisnik) session.getAttribute("korisnik");
+        if(loggedKorisnik.getUloga() == Korisnik.Uloga.CITALAC || loggedKorisnik.getUloga() == Korisnik.Uloga.AUTOR) {
 
-        // Da li je korisnik prijavljen
-        Korisnik prijavljeniKorisnik = (Korisnik) session.getAttribute("korisnik");
-        if (prijavljeniKorisnik == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-
-
-        // Pronalaženje knjige koju želimo da dodamo na policu
-        Knjiga knjiga = knjigaService.findByNaslov(knjigaNaslov);
-        if (knjiga == null) {
-            return new ResponseEntity<>("Knjiga ne postoji!", HttpStatus.NOT_FOUND);
-        }
-
-
-
-        // Provera da li korisnik ima odabranu policu medju svojim primarnim policama
-        Polica targetPrimarnaPolica = new Polica();
-        for (Polica polica : prijavljeniKorisnik.getPolice()) {
-            if (polica.getNaziv().equals(policaNaziv) && polica.isPrimarna()) {
-                targetPrimarnaPolica = polica;
-                break;
-            }
-        }
-
-       /* for(Polica p : prijavljeniKorisnik.getPolice()) {
-            if(p.isPrimarna()) {
-                for(StavkaPolice s : p.getStavkaPolice()) {
-                    if(s.getKnjiga().getNaslov().equals(knjiga.getNaslov())) {
-                        return new ResponseEntity<>("Knjiga moze biti samo na jednoj primarnoj polici!", HttpStatus.FORBIDDEN);
+            Polica polica = this.policaService.getById(policaId);
+            Knjiga knjiga = this.knjigaService.getByNaslov(knjigaNaslov);
+            if(polica.isPrimarna()) {
+                if(knjigaService.findKnjigaOnPrimarna(loggedKorisnik.getId(), knjiga.getNaslov())) {
+                    return new ResponseEntity<>("Knjiga vec postoji na primarnoj", HttpStatus.BAD_REQUEST);
+                } else {
+                    if(polica.getNaziv().equals("Read")) {
+                        policaService.addKnjigaOnPolica(policaId, knjiga.getNaslov());
+                        return new ResponseEntity<>("Knjiga je dodata na Read policu", HttpStatus.OK);
+                    } else {
+                        policaService.addKnjigaOnPolica(policaId, knjiga.getNaslov());
+                        return new ResponseEntity<>("Knjiga je dodata na primarnu policu", HttpStatus.OK);
                     }
                 }
+            } else {
+                if(knjigaService.findKnjigaOnPrimarna(loggedKorisnik.getId(), knjiga.getNaslov())) {
+                    policaService.addKnjigaOnPolica(policaId, knjiga.getNaslov());
+                    return new ResponseEntity<>("Knjiga je dodata na policu koja nije primarna", HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>("Knjiga se prvo mora staviti na jednu od primarnih polica", HttpStatus.BAD_REQUEST);
+                }
             }
-        }*/
 
-        // Provera da li korisnik ima odabranu policu medju policama koje je sam napravio
-        Polica targetSopstvenaPolica = new Polica();
-        for (Polica polica : prijavljeniKorisnik.getPolice()) {
-            if (polica.getNaziv().equals(policaNaziv) && !polica.isPrimarna()) {
-                targetSopstvenaPolica = polica;
-                break;
-            }
         }
 
-        if (targetPrimarnaPolica == null && targetSopstvenaPolica == null) {
-            return new ResponseEntity<>("Polica ne postoji ili nije validna!", HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>("Vi niste taj korisnik", HttpStatus.UNAUTHORIZED);
 
 
-        // Dodavanje knjige na ciljanu policu
-        if (targetPrimarnaPolica != null) {
-            StavkaPolice novaStavka = new StavkaPolice(knjiga, null);
-            targetPrimarnaPolica.getStavkaPolice().add(novaStavka);
-            stavkaPoliceService.save(novaStavka);
-            policaService.save(targetPrimarnaPolica);
-        } else if (targetSopstvenaPolica != null) {
-            StavkaPolice novaStavka = new StavkaPolice(knjiga, null);
-            targetSopstvenaPolica.getStavkaPolice().add(novaStavka);
-            policaService.save(targetSopstvenaPolica);
-        }
 
-        return new ResponseEntity<>("Knjiga uspešno dodata na policu!", HttpStatus.OK);
+
+
+
+
     }
 
    /* @PostMapping("/dodaj-recenziju-na-read/{policaId}/{naslov}")
@@ -422,7 +448,7 @@ public class KorisnikRestController {
         return new ResponseEntity<>("Uspesno dodata recenzija!", HttpStatus.OK);
     }*/
 
-    @PostMapping("/dodavanje-recenzije/{knjigaId}")
+    @PostMapping("/dodavanje-recenzije/{naslov}")
     public ResponseEntity<String> dodajRecenziju(@PathVariable String naslov, @RequestBody RecenzijaDto novaRecenzijaDTO, HttpSession session) {
         Korisnik prijavljeniKorisnik = (Korisnik) session.getAttribute("korisnik");
 
@@ -431,10 +457,11 @@ public class KorisnikRestController {
         }
 
         Knjiga knjiga = this.knjigaService.findByNaslov(naslov);
+        Korisnik korisnik = this.korisnikService.getById(prijavljeniKorisnik.getId());
 
         StavkaPolice targetStavka = null;
 
-        for (Polica polica : prijavljeniKorisnik.getPolice()) {
+        for (Polica polica : korisnik.getPolice()) {
             for (StavkaPolice stavka : polica.getStavkaPolice()) {
                 if (stavka.getKnjiga().equals(knjiga)) {
                     targetStavka = stavka;
@@ -452,7 +479,7 @@ public class KorisnikRestController {
         novaRecenzija.setTekst(novaRecenzijaDTO.getTekst());
         novaRecenzija.setDatumRecenzije(new Date());
         recenzijaService.save(novaRecenzija);
-        novaRecenzija.setKorisnik(prijavljeniKorisnik);
+        novaRecenzija.setKorisnik(korisnik);
 
         targetStavka.setRecenzija(novaRecenzija);
         stavkaPoliceService.save(targetStavka);
@@ -463,38 +490,44 @@ public class KorisnikRestController {
     public ResponseEntity<String> azurirajProfil(@RequestBody KorisnikDto korisnikDTO, HttpSession session) {
         // Provera da li je korisnik prijavljen
         Korisnik prijavljeniKorisnik = (Korisnik) session.getAttribute("korisnik");
-        if (prijavljeniKorisnik == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-        LoginDto l = new LoginDto(prijavljeniKorisnik.getMail(), prijavljeniKorisnik.getLozinka());
-        potvrdiLozinku(l, session);
-        // Provera da li je uneta trenutna lozinka ispravna
+
+        if(prijavljeniKorisnik.getUloga() == Korisnik.Uloga.CITALAC || prijavljeniKorisnik.getUloga() == Korisnik.Uloga.AUTOR) {
+
+
+            if (prijavljeniKorisnik == null) {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+            LoginDto l = new LoginDto(prijavljeniKorisnik.getMail(), prijavljeniKorisnik.getLozinka());
+            potvrdiLozinku(l, session);
+            // Provera da li je uneta trenutna lozinka ispravna
      /*   String trenutnaLozinka = loginDTO.getLozinka();
         if (!trenutnaLozinka.equals(prijavljeniKorisnik.getLozinka())) {
             return new ResponseEntity<>("Trenutna lozinka nije ispravna!", HttpStatus.BAD_REQUEST);
         }*/
 
-        // Ažuriranje podataka korisnika
-        prijavljeniKorisnik.setIme(korisnikDTO.getIme());
-        prijavljeniKorisnik.setPrezime(korisnikDTO.getPrezime());
-        prijavljeniKorisnik.setKorisnickoIme(korisnikDTO.getKorisnickoIme());
-        prijavljeniKorisnik.setMail(korisnikDTO.getMail());
-        prijavljeniKorisnik.setLozinka(korisnikDTO.getLozinka());
-        prijavljeniKorisnik.setDatumRodjenja(korisnikDTO.getDatumRodjenja());
-        prijavljeniKorisnik.setProfilnaSlika(korisnikDTO.getProfilnaSlika());
-        prijavljeniKorisnik.setOpis(korisnikDTO.getOpis());
+            // Ažuriranje podataka korisnika
+            prijavljeniKorisnik.setIme(korisnikDTO.getIme());
+            prijavljeniKorisnik.setPrezime(korisnikDTO.getPrezime());
+            prijavljeniKorisnik.setKorisnickoIme(korisnikDTO.getKorisnickoIme());
+            prijavljeniKorisnik.setMail(korisnikDTO.getMail());
+            prijavljeniKorisnik.setLozinka(korisnikDTO.getLozinka());
+            prijavljeniKorisnik.setDatumRodjenja(korisnikDTO.getDatumRodjenja());
+            prijavljeniKorisnik.setProfilnaSlika(korisnikDTO.getProfilnaSlika());
+            prijavljeniKorisnik.setOpis(korisnikDTO.getOpis());
 
 
-        // Provera da li je uneta nova lozinka i ažuriranje lozinke ako je uneta
-        String novaLozinka = korisnikDTO.getLozinka();
-        if (!novaLozinka.isEmpty()) {
-            prijavljeniKorisnik.setLozinka(novaLozinka);
+            // Provera da li je uneta nova lozinka i ažuriranje lozinke ako je uneta
+            String novaLozinka = korisnikDTO.getLozinka();
+            if (!novaLozinka.isEmpty()) {
+                prijavljeniKorisnik.setLozinka(novaLozinka);
+            }
+
+            // Sačuvajte izmenjenog korisnika u bazi podataka
+            korisnikService.save(prijavljeniKorisnik);
+
+            return new ResponseEntity<>("Profil uspešno ažuriran!", HttpStatus.OK);
         }
-
-        // Sačuvajte izmenjenog korisnika u bazi podataka
-        korisnikService.save(prijavljeniKorisnik);
-
-        return new ResponseEntity<>("Profil uspešno ažuriran!", HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.FORBIDDEN);
 
     }
 
