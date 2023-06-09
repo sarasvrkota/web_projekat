@@ -1,5 +1,6 @@
 package com.Projekat_Web.Projekat_Web.service;
 
+import com.Projekat_Web.Projekat_Web.entity.Korisnik;
 import com.Projekat_Web.Projekat_Web.entity.Recenzija;
 import com.Projekat_Web.Projekat_Web.entity.Zanr;
 import com.Projekat_Web.Projekat_Web.repository.RecenzijaRepository;
@@ -18,4 +19,9 @@ public class ZanrService
     public List<Zanr> findAll(){
         return zanrRepository.findAll();
     }
+    public Zanr save(Zanr zanr)
+    {
+        return this.zanrRepository.save(zanr);
+    }
+
 }

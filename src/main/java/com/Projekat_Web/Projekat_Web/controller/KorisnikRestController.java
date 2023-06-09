@@ -34,6 +34,12 @@ public class KorisnikRestController {
     @Autowired
     private StavkaPoliceService stavkaPoliceService;
 
+    @Autowired
+    private AutorService autorService;
+
+    @Autowired
+    private ZahtevZaAktivacijuNalogaAutoraService zahtevZaAktivacijuNalogaAutoraService;
+
 
     @GetMapping("/pocetna-stranica")
     public String welcome(){
@@ -311,12 +317,6 @@ public class KorisnikRestController {
             korisnikService.save(korisnikIzBaze);
             policaService.delete(polica);
 
-       /* police.remove(polica);
-        policaService.delete(polica);
-        prijavljeniKorisnik.setPolice(police);
-
-        korisnikService.save(prijavljeniKorisnik);*/
-
 
             return new ResponseEntity<>("Polica je uspešno obrisana", HttpStatus.OK);
 
@@ -399,54 +399,9 @@ public class KorisnikRestController {
         return new ResponseEntity<>("Vi niste taj korisnik", HttpStatus.UNAUTHORIZED);
 
 
-
-
-
-
-
     }
 
-   /* @PostMapping("/dodaj-recenziju-na-read/{policaId}/{naslov}")
-    public ResponseEntity<String> dodajRecenzijuNaRead(@PathVariable Long policaId, @PathVariable String naslov,
-                                                       @RequestBody RecenzijaDto recenzijaDto, HttpSession session) {
-        // Provera da li je korisnik prijavljen
-        Korisnik prijavljeniKorisnik = (Korisnik) session.getAttribute("korisnik");
-        if (prijavljeniKorisnik == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-        Polica targetPolica = policaService.findById(policaId);
-        Knjiga targetKnjiga = knjigaService.findByNaslov(naslov);
-        // Provera da li je pronađena polica "Read"
-        if (targetPolica == null) {
-            return new ResponseEntity<>("Polica 'Read' ne postoji!", HttpStatus.NOT_FOUND);
-        }
 
-        // Dodavanje recenzije na policu "Read"
-        Recenzija novaRecenzija = new Recenzija(recenzijaDto.getOcena(), recenzijaDto.getTekst(), recenzijaDto.getDatumRecenzije(), prijavljeniKorisnik);
-        targetPolica.getStavkaPolice().forEach(stavka -> stavka.setRecenzija(novaRecenzija));
-        recenzijaService.save(novaRecenzija);
-        policaService.save(targetPolica);
-
-        return new ResponseEntity<>("Recenzija uspešno dodata na policu 'Read'!", HttpStatus.OK);
-    }*/
-  /*  @PostMapping("/dodavanje-recenzije")
-    public ResponseEntity<String> dodajRecenziju(@RequestBody RecenzijaDto novaRecenzijaDTO, HttpSession session) {
-
-        Korisnik prijavljeniKorisnik = (Korisnik) session.getAttribute("korisnik");
-
-        if(prijavljeniKorisnik == null) {
-            return new ResponseEntity<>("Korisnik nije prijavljen", HttpStatus.UNAUTHORIZED);
-        }
-
-        Recenzija novaRecenzija = new Recenzija();
-        novaRecenzija.setOcena(novaRecenzijaDTO.getOcena()); // Postavite željenu ocenu
-        novaRecenzija.setTekst(novaRecenzijaDTO.getTekst()); // Postavite željeni tekst recenzije
-        novaRecenzija.setDatumRecenzije(new Date());
-        recenzijaService.save(novaRecenzija);
-        novaRecenzija.setKorisnik(prijavljeniKorisnik);
-        //novaStavka.setRecenzija(novaRecenzija); // Postavite recenziju na stavku
-        return new ResponseEntity<>("Uspesno dodata recenzija!", HttpStatus.OK);
-    }*/
 
     @PostMapping("/dodavanje-recenzije/{naslov}")
     public ResponseEntity<String> dodajRecenziju(@PathVariable String naslov, @RequestBody RecenzijaDto novaRecenzijaDTO, HttpSession session) {
@@ -547,6 +502,8 @@ public class KorisnikRestController {
         return new ResponseEntity<>("Ispravna lozinka!", HttpStatus.OK);
 
     }
+
+
 
 
 

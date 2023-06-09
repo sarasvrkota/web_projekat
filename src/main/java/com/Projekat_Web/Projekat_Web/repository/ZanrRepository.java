@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ZanrRepository extends JpaRepository<Zanr, String> {
+
+    Zanr save(Zanr zanr);
 }

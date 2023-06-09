@@ -1,5 +1,6 @@
 package com.Projekat_Web.Projekat_Web.controller;
 
+import com.Projekat_Web.Projekat_Web.dto.AutorDto;
 import com.Projekat_Web.Projekat_Web.dto.KnjigaDto;
 import com.Projekat_Web.Projekat_Web.entity.Autor;
 import com.Projekat_Web.Projekat_Web.entity.Knjiga;
@@ -65,13 +66,13 @@ public class AutorRestController {
 
     }
 
-    @PostMapping(value = "/azuriranje-knjige/{naslovKnjige}")
+    @PutMapping(value = "/azuriranje-knjige/{naslovKnjige}")
     public ResponseEntity<KnjigaDto> azurirajKnjigu(@PathVariable(value = "naslovKnjige") String naslovKnjige, @RequestBody KnjigaDto knjigaDto, HttpSession session) {
         Object imaSesiju = session.getAttribute("korisnik");
         Korisnik prijavljeniKorisnik = (Korisnik) imaSesiju;
 
         Knjiga knjiga = this.knjigaService.getByNaslov(naslovKnjige);
-        //knjiga.setNaslov(knjigaDto.getNaslov());
+        knjiga.setNaslov(knjigaDto.getNaslov());
         knjiga.setNaslovnaFotografija(knjigaDto.getNaslovnaFotografija());
         knjiga.setISBN(knjigaDto.getISBN());
         knjiga.setDatumObjavljivanja(knjigaDto.getDatumObjavljivanja());
@@ -95,6 +96,19 @@ public class AutorRestController {
         KnjigaDto knjigaDto1 = new KnjigaDto(knjiga);
 
         return new ResponseEntity<>(knjigaDto1, HttpStatus.OK);
+
+    }
+
+
+    @PutMapping("/azuriraj-autora/{id}")
+    public ResponseEntity<?> azurirajProfilAutora(@PathVariable Long id, @RequestBody AutorDto autorDto,  HttpSession session) {
+        Autor prijavljeniKorisnik = (Autor) session.getAttribute("korisnik");
+        if (prijavljeniKorisnik != null && prijavljeniKorisnik.getUloga().equals(Korisnik.Uloga.ADMINISTRATOR)) {
+            autorService.azurirajProfilAutora(id, autorDto);
+
+            return ResponseEntity.ok("Uspesno azuriran autor!");
+        }
+        return ResponseEntity.ok("Autor nije azuriran!");
 
     }
 

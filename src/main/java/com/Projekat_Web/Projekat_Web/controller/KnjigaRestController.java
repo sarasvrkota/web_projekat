@@ -2,8 +2,10 @@ package com.Projekat_Web.Projekat_Web.controller;
 
 import com.Projekat_Web.Projekat_Web.dto.KnjigaDto;
 import com.Projekat_Web.Projekat_Web.dto.KorisnikDto;
+import com.Projekat_Web.Projekat_Web.dto.ZanrDto;
 import com.Projekat_Web.Projekat_Web.entity.*;
 import com.Projekat_Web.Projekat_Web.service.KnjigaService;
+import com.Projekat_Web.Projekat_Web.service.ZanrService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,9 @@ public class KnjigaRestController {
 
     @Autowired
     private KnjigaService knjigaService;
+
+    @Autowired
+    private ZanrService zanrService;
 
 
     @GetMapping(value = "/pretraga",produces = MediaType.APPLICATION_JSON_VALUE)
@@ -91,6 +96,62 @@ public class KnjigaRestController {
         return new ResponseEntity<>(knjigaDtos, HttpStatus.OK);
 
     }
+
+    @PostMapping("/dodavanje-knjiga-admin")
+    public ResponseEntity<?> dodajKnjigu(@RequestBody KnjigaDto knjigaDto, HttpSession session) {
+        Korisnik prijavljeniKorisnik = (Korisnik) session.getAttribute("korisnik");
+        if (prijavljeniKorisnik != null && prijavljeniKorisnik.getUloga().equals(Korisnik.Uloga.ADMINISTRATOR)) {
+            Knjiga knjiga = new Knjiga();
+            knjiga.setNaslov(knjigaDto.getNaslov());
+            knjiga.setNaslovnaFotografija(knjigaDto.getNaslovnaFotografija());
+            knjiga.setDatumObjavljivanja(knjigaDto.getDatumObjavljivanja());
+            knjiga.setBrojStrana(knjigaDto.getBrojStrana());
+            knjiga.setOpis(knjigaDto.getOpis());
+            knjiga.setISBN(knjigaDto.getISBN());
+
+            ZanrDto zanrDto = new ZanrDto(knjigaDto.getZanr());
+            Zanr zanr = new Zanr();
+            zanr.setNaziv(zanrDto.getNaziv());
+            //this.zanrService.save(zanr);
+
+            knjiga.setZanr(zanr);
+
+            knjiga.setOcena(knjigaDto.getOcena());
+
+             knjigaService.save(knjiga);
+            return ResponseEntity.ok(knjiga);
+        }
+        return ResponseEntity.ok("Prijavljeni korisnik nije administrator!");
+    }
+
+    @PutMapping("/azuriranje-knjiga-admin/{id}")
+    public ResponseEntity<?> azurirajKnjigu(@PathVariable Long id, @RequestBody KnjigaDto knjigaDto, HttpSession session) {
+        Korisnik prijavljeniKorisnik = (Korisnik) session.getAttribute("korisnik");
+        if (prijavljeniKorisnik != null && prijavljeniKorisnik.getUloga().equals(Korisnik.Uloga.ADMINISTRATOR)) {
+
+            Knjiga knjiga = this.knjigaService.getById(id);
+            knjiga.setNaslov(knjigaDto.getNaslov());
+            knjiga.setNaslovnaFotografija(knjigaDto.getNaslovnaFotografija());
+            knjiga.setDatumObjavljivanja(knjigaDto.getDatumObjavljivanja());
+            knjiga.setBrojStrana(knjigaDto.getBrojStrana());
+            knjiga.setOpis(knjigaDto.getOpis());
+            knjiga.setISBN(knjigaDto.getISBN());
+
+            ZanrDto zanrDto = new ZanrDto(knjigaDto.getZanr());
+            Zanr zanr = new Zanr();
+            zanr.setNaziv(zanrDto.getNaziv());
+            this.zanrService.save(zanr);
+            knjiga.setZanr(zanr);
+
+            knjiga.setOcena(knjigaDto.getOcena());
+
+            knjigaService.save(knjiga);
+            return ResponseEntity.ok(knjiga);
+        }
+        return ResponseEntity.ok("Prijavljeni korisnik nije administrator!");
+    }
+
+
 
 
 

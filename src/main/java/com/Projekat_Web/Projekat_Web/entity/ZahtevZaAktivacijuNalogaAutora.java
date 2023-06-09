@@ -13,7 +13,9 @@ import java.util.Date;
 @Table(name = "zahtev_za_aktivaciju_naloga_autora")
 public class ZahtevZaAktivacijuNalogaAutora implements Serializable {
 
-    public enum StatusZahteva {NA_CEKANJU, ODBIJEN, ODOBREN}
+
+
+    public enum Status {NA_CEKANJU, ODBIJEN, ODOBREN}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +35,7 @@ public class ZahtevZaAktivacijuNalogaAutora implements Serializable {
 
     @Column
     @Enumerated(EnumType.STRING)
-    private StatusZahteva status;
+    private Status status;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Autor autor;

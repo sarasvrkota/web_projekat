@@ -18,7 +18,7 @@ public class StavkaPolice implements Serializable {
 
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "knjiga_id", referencedColumnName = "naslov")
+    @JoinColumn(name = "knjiga_id", referencedColumnName = "id")
     private Knjiga knjiga;
 
     @OneToOne(cascade = CascadeType.ALL)

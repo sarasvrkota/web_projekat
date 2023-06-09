@@ -14,4 +14,6 @@ public interface AutorRepository extends JpaRepository<Autor, Long> {
     Autor save(Autor autor);
 
     Autor getById(Long id);
+
+    //Autor findAutorByKorisnikId(Long id);
 }

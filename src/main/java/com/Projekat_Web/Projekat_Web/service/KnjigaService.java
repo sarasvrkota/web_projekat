@@ -62,6 +62,8 @@ public class KnjigaService {
             return false;
         }
 
+        public Knjiga getById(Long id) { return this.knjigaRepository.getById(id);}
+
 
 
 

@@ -2,18 +2,17 @@ package com.Projekat_Web.Projekat_Web.controller;
 
 import com.Projekat_Web.Projekat_Web.dto.RecenzijaDto;
 import com.Projekat_Web.Projekat_Web.dto.ZanrDto;
+import com.Projekat_Web.Projekat_Web.entity.Korisnik;
 import com.Projekat_Web.Projekat_Web.entity.Recenzija;
 import com.Projekat_Web.Projekat_Web.entity.Zanr;
 import com.Projekat_Web.Projekat_Web.service.RecenzijaService;
 import com.Projekat_Web.Projekat_Web.service.ZanrService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,5 +44,24 @@ public class ZanrRestController {
             }
             return new ResponseEntity<>(zanrDtos, HttpStatus.OK);
 
+        }
+
+        @PostMapping("/dodavanje")
+        public ResponseEntity<ZanrDto> dodajZanr(@RequestBody ZanrDto zanrDto, HttpSession session) {
+        Korisnik prijavljeniKorisnik = (Korisnik) session.getAttribute("korisnik");
+        if (prijavljeniKorisnik != null && prijavljeniKorisnik.getUloga() == Korisnik.Uloga.ADMINISTRATOR) {
+
+                    Zanr zanr = new Zanr();
+                    zanr.setNaziv(zanrDto.getNaziv());
+
+                    zanrService.save(zanr);
+                    ZanrDto dto = new ZanrDto(zanr);
+
+                    return new ResponseEntity<>(dto, HttpStatus.CREATED);
+
+                //return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        }
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 }
