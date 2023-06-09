@@ -151,7 +151,18 @@ public class KnjigaRestController {
         return ResponseEntity.ok("Prijavljeni korisnik nije administrator!");
     }
 
-
+    @DeleteMapping("/brisanje/{id}")
+    public ResponseEntity<?> obrisiKnjiguPoNaslovu(@PathVariable("id") Long id, HttpSession session) {
+        Korisnik prijavljeniKorisnik = (Korisnik) session.getAttribute("korisnik");
+        if (prijavljeniKorisnik != null && prijavljeniKorisnik.getUloga().equals(Korisnik.Uloga.ADMINISTRATOR)) {
+            boolean obrisana = knjigaService.obrisiKnjigu(id);
+            if (obrisana) {
+                return ResponseEntity.ok("Uspesno obrisana knjiga!");
+            }
+            return ResponseEntity.ok("Knjiga nije obrisana!");
+        }
+        return ResponseEntity.ok("Prijavljeni korisnik nije administrator!");
+    }
 
 
 

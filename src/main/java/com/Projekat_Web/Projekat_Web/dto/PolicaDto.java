@@ -1,6 +1,7 @@
 package com.Projekat_Web.Projekat_Web.dto;
 
 
+import com.Projekat_Web.Projekat_Web.entity.Polica;
 import com.Projekat_Web.Projekat_Web.entity.StavkaPolice;
 import lombok.*;
 
@@ -20,5 +21,11 @@ public class PolicaDto {
         this.naziv = naziv;
         this.primarna = primarna;
         this.stavkaPolice = stavkaPolice;
+    }
+
+    public PolicaDto(Polica polica) {
+        this.naziv = polica.getNaziv();
+        this.primarna = polica.isPrimarna();
+        this.stavkaPolice = polica.getStavkaPolice();
     }
 }

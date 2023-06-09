@@ -1,9 +1,8 @@
 package com.Projekat_Web.Projekat_Web.service;
 
-import com.Projekat_Web.Projekat_Web.entity.Knjiga;
-import com.Projekat_Web.Projekat_Web.entity.Korisnik;
-import com.Projekat_Web.Projekat_Web.entity.Polica;
-import com.Projekat_Web.Projekat_Web.entity.StavkaPolice;
+import com.Projekat_Web.Projekat_Web.dto.RecenzijaDto;
+import com.Projekat_Web.Projekat_Web.entity.*;
+import com.Projekat_Web.Projekat_Web.repository.AutorRepository;
 import com.Projekat_Web.Projekat_Web.repository.KnjigaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,13 @@ public class KnjigaService {
     private KnjigaRepository knjigaRepository;
 
     @Autowired
+    private RecenzijaService recenzijaService;
+
+    @Autowired
     private KorisnikService korisnikService;
+
+    @Autowired
+    private AutorRepository autorRepository;
 
     public List<Knjiga> findAll(){
         return knjigaRepository.findAll();
@@ -63,6 +68,31 @@ public class KnjigaService {
         }
 
         public Knjiga getById(Long id) { return this.knjigaRepository.getById(id);}
+
+    public boolean obrisiKnjigu(Long id)
+    {
+        Knjiga knjiga = knjigaRepository.getById(id);
+
+        List<RecenzijaDto> recenzije = recenzijaService.pronadjiRecenzije(knjiga.getNaslov());
+        if (recenzije.isEmpty()) {
+
+            List<Autor> autori = autorRepository.findAll();
+            Autor autorKnjige = new Autor();
+            for(Autor a : autori){
+                if (a.getSpisakKnjiga().contains(knjiga)){
+                    autorKnjige = a;
+                }
+            }
+            autorKnjige.getSpisakKnjiga().remove(knjiga);
+            autorRepository.save(autorKnjige);
+
+            knjigaRepository.delete(knjiga);
+
+            return true;
+        }
+        return false;
+
+    }
 
 
 
