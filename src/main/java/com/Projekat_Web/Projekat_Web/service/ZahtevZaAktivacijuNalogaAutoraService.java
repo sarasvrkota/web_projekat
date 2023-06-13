@@ -4,15 +4,15 @@ import com.Projekat_Web.Projekat_Web.controller.EmailRestController;
 import com.Projekat_Web.Projekat_Web.dto.ZahtevZaAktivacijuNalogaAutoraDto;
 import com.Projekat_Web.Projekat_Web.entity.Autor;
 import com.Projekat_Web.Projekat_Web.entity.Korisnik;
+import com.Projekat_Web.Projekat_Web.entity.Polica;
 import com.Projekat_Web.Projekat_Web.entity.ZahtevZaAktivacijuNalogaAutora;
 import com.Projekat_Web.Projekat_Web.repository.AutorRepository;
+import com.Projekat_Web.Projekat_Web.repository.KorisnikRepository;
 import com.Projekat_Web.Projekat_Web.repository.ZahtevZaAktivacijuNalogaAutoraRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ZahtevZaAktivacijuNalogaAutoraService {
@@ -24,6 +24,12 @@ public class ZahtevZaAktivacijuNalogaAutoraService {
 
     @Autowired
     private EmailRestController emailRestController;
+
+    @Autowired
+    private KorisnikRepository korisnikRepository;
+
+    @Autowired
+    private PolicaService policaService;
 
 
     public ZahtevZaAktivacijuNalogaAutora login(String email, String telefon) {
@@ -54,10 +60,10 @@ public class ZahtevZaAktivacijuNalogaAutoraService {
     public void podnesiZahtevZaAktivaciju(ZahtevZaAktivacijuNalogaAutoraDto zahtev, Korisnik prijavljeniKorisnik) {
 
 
-        Autor autor = autorRepository.findById(prijavljeniKorisnik.getId()).orElse(null);
+        /*Autor autor = autorRepository.findById(prijavljeniKorisnik.getId()).orElse(null);
         if (autorRepository.getById(zahtev.getId()).isJeAktivan()) {
             throw new RuntimeException("Autor je aktivan.");
-        }
+        }*/
         ZahtevZaAktivacijuNalogaAutora zahtev1 = new ZahtevZaAktivacijuNalogaAutora();
         zahtev1.setEmail(zahtev.getEmail());
         zahtev1.setTelefon(zahtev.getTelefon());
@@ -83,7 +89,7 @@ public class ZahtevZaAktivacijuNalogaAutoraService {
         zahtev2.setEmail(zahtevZaAktivacijuNalogaAutoraRepository.findByAutor(autor).getEmail());
 
 
-        zahtevZaAktivacijuNalogaAutoraRepository.save(zahtev2);
+        zahtevZaAktivacijuNalogaAutoraRepository.delete(zahtev2);
 
 
         emailRestController.sendEmailReject(zahtev2.getEmail());
@@ -95,23 +101,43 @@ public class ZahtevZaAktivacijuNalogaAutoraService {
     public void prihvatiZahtev(Long id, Korisnik prijavljeniKorisnik) {
 
         ZahtevZaAktivacijuNalogaAutora zahtev2 = new ZahtevZaAktivacijuNalogaAutora();
-        Autor autor = autorRepository.findById(id).orElse(null);
-        zahtevZaAktivacijuNalogaAutoraRepository.findByAutor(autor);
-        zahtev2.setPoruka(zahtevZaAktivacijuNalogaAutoraRepository.findByAutor(autor).getPoruka());
-        zahtev2.setDatum(zahtevZaAktivacijuNalogaAutoraRepository.findByAutor(autor).getDatum());
-        zahtev2.setTelefon(zahtevZaAktivacijuNalogaAutoraRepository.findByAutor(autor).getTelefon());
+        Autor a = autorRepository.findById(id).orElse(null);
+        zahtevZaAktivacijuNalogaAutoraRepository.findByAutor(a);
+        zahtev2.setPoruka(zahtevZaAktivacijuNalogaAutoraRepository.findByAutor(a).getPoruka());
+        zahtev2.setDatum(zahtevZaAktivacijuNalogaAutoraRepository.findByAutor(a).getDatum());
+        zahtev2.setTelefon(zahtevZaAktivacijuNalogaAutoraRepository.findByAutor(a).getTelefon());
         zahtev2.setStatus(ZahtevZaAktivacijuNalogaAutora.Status.ODOBREN);
-        zahtev2.setAutor(autor);
-        autor.setJeAktivan(true);
-        zahtev2.setEmail(zahtevZaAktivacijuNalogaAutoraRepository.findByAutor(autor).getEmail());
-
+        zahtev2.setAutor(a);
+        a.setJeAktivan(true);
+        zahtev2.setEmail(zahtevZaAktivacijuNalogaAutoraRepository.findByAutor(a).getEmail());
         zahtevZaAktivacijuNalogaAutoraRepository.save(zahtev2);
+        autorRepository.save(a);
+        Korisnik korisnik = korisnikRepository.getById(a.getId());
+        Polica wantToRead = new Polica();
+        wantToRead.setNaziv("Want to Read");
+        wantToRead.setPrimarna(true);
 
-        autorRepository.save(autor);
+        Polica currentlyReading = new Polica();
+        currentlyReading.setNaziv("Currently Reading");
+        currentlyReading.setPrimarna(true);
+
+        Polica read = new Polica();
+        read.setNaziv("Read");
+        read.setPrimarna(true);
+
+        korisnik.getPolice().add(wantToRead);
+        korisnik.getPolice().add(currentlyReading);
+        korisnik.getPolice().add(read);
+
+        korisnikRepository.save(korisnik);
+
+
+
+
 
         String email2 = zahtev2.getEmail();
         String lozinka = Generator.generisiLozinku();
-        autor.setLozinka(lozinka);
+        a.setLozinka(lozinka);
 
         emailRestController.sendEmailApproved(email2, lozinka);
 

@@ -1,5 +1,6 @@
 package com.Projekat_Web.Projekat_Web.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,6 +27,7 @@ public class Recenzija implements Serializable {
     private Date datumRecenzije;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JsonIgnore
     @JoinColumn(name = "korisnik_id", referencedColumnName = "korisnikk_id")
     private Korisnik korisnik;
 

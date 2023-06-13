@@ -32,4 +32,6 @@ public class StavkaPoliceService {
         List<StavkaPolice> kknjige = stavkaPoliceRepository.findAllByKnjiga(knjiga);
         return this.stavkaPoliceRepository.findAllByKnjiga(knjiga);}
 
+    public StavkaPolice getByKnjiga(Knjiga knjiga) { return this.stavkaPoliceRepository.getByKnjiga(knjiga);}
+
 }

@@ -51,6 +51,10 @@ public class ZanrRestController {
         Korisnik prijavljeniKorisnik = (Korisnik) session.getAttribute("korisnik");
         if (prijavljeniKorisnik != null && prijavljeniKorisnik.getUloga() == Korisnik.Uloga.ADMINISTRATOR) {
 
+                    Zanr zanr1 = zanrService.getByNaziv(zanrDto.getNaziv());
+                    if(zanr1 != null) {
+                        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                    }
                     Zanr zanr = new Zanr();
                     zanr.setNaziv(zanrDto.getNaziv());
 

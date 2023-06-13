@@ -14,4 +14,6 @@ public interface RecenzijaRepository extends JpaRepository<Recenzija, Long> {
     List<Recenzija> findAll();
 
     public Recenzija save(Recenzija recenzija);
+
+    Recenzija getById(Long id);
 }

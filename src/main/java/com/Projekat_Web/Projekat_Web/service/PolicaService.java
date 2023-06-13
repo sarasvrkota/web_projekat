@@ -12,8 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class PolicaService {
@@ -61,6 +63,9 @@ public class PolicaService {
         stavkaPolice.setKnjiga(knjiga);
         stavkaPoliceRepository.save(stavkaPolice);
         polica.getStavkaPolice().add(stavkaPolice);
+        Set<StavkaPolice> sp = new HashSet<>();
+        sp.add(stavkaPolice);
+        polica.setStavkaPolice(sp);
         save(polica);
 
         return stavkaPolice.getId();

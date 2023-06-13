@@ -10,7 +10,7 @@ import java.util.Date;
 @Getter @Setter @ToString
 public class KnjigaDto {
 
-    private String naslov; //id
+    private String naslov;
     private String naslovnaFotografija;
     private String ISBN;
     private Date datumObjavljivanja;

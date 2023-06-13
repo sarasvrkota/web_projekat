@@ -164,6 +164,21 @@ public class KnjigaRestController {
         return ResponseEntity.ok("Prijavljeni korisnik nije administrator!");
     }
 
+    @PostMapping("/skidanje-sa-police/{idKnjige}/{nazivPolice}")
+    public ResponseEntity<?> skiniKnjiguSaPolice(@PathVariable("idKnjige") Long id,
+                                                 @PathVariable String nazivPolice, HttpSession session) {
+        Korisnik prijavljeniKorisnik = (Korisnik) session.getAttribute("korisnik");
+        if (prijavljeniKorisnik != null) {
+            boolean obrisana = knjigaService.skiniKnjigu(id, nazivPolice, prijavljeniKorisnik);
+            if (obrisana) {
+                return ResponseEntity.ok("Uspesno skinuta knjiga!");
+            }
+            return ResponseEntity.ok("Knjiga nije skinuta!");
+        }
+        return ResponseEntity.badRequest().build();
+
+    }
+
 
 
 }

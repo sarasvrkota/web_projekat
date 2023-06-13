@@ -17,4 +17,5 @@ public interface StavkaPoliceRepository extends JpaRepository<StavkaPolice, Long
     public StavkaPolice save(StavkaPolice stavkaPolice);
 
     List<StavkaPolice> findAllByKnjiga(Knjiga knjiga);
+    StavkaPolice getByKnjiga(Knjiga knjiga);
 }

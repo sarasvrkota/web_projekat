@@ -15,4 +15,6 @@ public class ZanrDto {
     public ZanrDto(Zanr zanr) {
         this.naziv = zanr.getNaziv();
     }
+
+    public ZanrDto() {}
 }

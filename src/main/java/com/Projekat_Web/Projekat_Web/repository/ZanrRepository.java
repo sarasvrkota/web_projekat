@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface ZanrRepository extends JpaRepository<Zanr, String> {
 
     Zanr save(Zanr zanr);
+
+    Zanr getByNaziv(String naziv);
 }

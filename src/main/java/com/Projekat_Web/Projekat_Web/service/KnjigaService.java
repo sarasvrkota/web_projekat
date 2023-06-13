@@ -4,6 +4,7 @@ import com.Projekat_Web.Projekat_Web.dto.RecenzijaDto;
 import com.Projekat_Web.Projekat_Web.entity.*;
 import com.Projekat_Web.Projekat_Web.repository.AutorRepository;
 import com.Projekat_Web.Projekat_Web.repository.KnjigaRepository;
+import com.Projekat_Web.Projekat_Web.repository.PolicaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,12 @@ public class KnjigaService {
     private KorisnikService korisnikService;
 
     @Autowired
+    private StavkaPoliceService stavkaPoliceService;
+    @Autowired
     private AutorRepository autorRepository;
+
+    @Autowired
+    private PolicaRepository policaRepository;
 
     public List<Knjiga> findAll(){
         return knjigaRepository.findAll();
@@ -88,9 +94,48 @@ public class KnjigaService {
 
             knjigaRepository.delete(knjiga);
 
+            StavkaPolice stavkaPolice = this.stavkaPoliceService.getByKnjiga(knjiga);
+            Polica polica = this.policaRepository.getByStavkaPolice(stavkaPolice);
+            /*if(polica.getNaziv().equals("Read") || polica.getNaziv().equals("Currently Reading")
+                    || polica.getNaziv().equals("Want to Read")) {
+
+
+
+            }*/
+
+
+
             return true;
         }
+
         return false;
+
+    }
+
+
+    public boolean skiniKnjigu(Long id, String nazivPolice, Korisnik prijavljeniKorisnik)
+    {
+
+        Knjiga knjiga = knjigaRepository.getById(id);
+        StavkaPolice stavkaPolice = stavkaPoliceService.getByKnjiga(knjiga);
+        Polica p1 = policaRepository.getByStavkaPolice(stavkaPolice);
+
+
+        if(prijavljeniKorisnik.getPolice().contains(stavkaPolice)) {
+
+        Polica polica = policaRepository.getByNaziv(nazivPolice);
+        if(polica.getId().equals(p1.getId())) {
+           if (polica.getNaziv().equals("Read")) {
+                stavkaPolice.setRecenzija(null);
+           }
+            polica.getStavkaPolice().remove(stavkaPolice);
+            policaRepository.save(polica);
+        } }
+
+
+
+
+        return true;
 
     }
 

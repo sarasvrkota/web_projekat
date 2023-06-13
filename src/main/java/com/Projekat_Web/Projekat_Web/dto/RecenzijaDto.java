@@ -25,7 +25,7 @@ public class RecenzijaDto {
     }
 
     public RecenzijaDto(Recenzija recenzija) {
-        this.id = recenzija.getId();
+
         this.ocena = recenzija.getOcena();
         this.tekst = recenzija.getTekst();
         this.datumRecenzije = recenzija.getDatumRecenzije();

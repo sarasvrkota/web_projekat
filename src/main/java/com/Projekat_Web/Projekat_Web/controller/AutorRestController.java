@@ -71,7 +71,16 @@ public class AutorRestController {
         Object imaSesiju = session.getAttribute("korisnik");
         Korisnik prijavljeniKorisnik = (Korisnik) imaSesiju;
 
+        Autor autorIzBaze = this.autorService.getById(prijavljeniKorisnik.getId());
+
         Knjiga knjiga = this.knjigaService.getByNaslov(naslovKnjige);
+
+        for(Knjiga k : autorIzBaze.getSpisakKnjiga()) {
+            if(!knjiga.getId().equals(k.getId())) {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+
+        }
         knjiga.setNaslov(knjigaDto.getNaslov());
         knjiga.setNaslovnaFotografija(knjigaDto.getNaslovnaFotografija());
         knjiga.setISBN(knjigaDto.getISBN());
@@ -83,7 +92,8 @@ public class AutorRestController {
 
         this.knjigaService.save(knjiga);
 
-        Autor autorIzBaze = this.autorService.getById(prijavljeniKorisnik.getId());
+
+
 
         Set<Knjiga> knjige = new HashSet<>();
         knjige = autorIzBaze.getSpisakKnjiga();

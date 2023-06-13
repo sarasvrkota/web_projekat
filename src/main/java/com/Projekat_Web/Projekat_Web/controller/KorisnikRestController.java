@@ -371,8 +371,14 @@ public class KorisnikRestController {
         Korisnik loggedKorisnik = (Korisnik) session.getAttribute("korisnik");
         if(loggedKorisnik.getUloga() == Korisnik.Uloga.CITALAC || loggedKorisnik.getUloga() == Korisnik.Uloga.AUTOR) {
 
+
             Polica polica = this.policaService.getById(policaId);
             Knjiga knjiga = this.knjigaService.getByNaslov(knjigaNaslov);
+
+        /*    if(!knjigaService.findKnjigaOnPrimarna(loggedKorisnik.getId(), knjiga.getNaslov())) {
+
+                return new ResponseEntity<>("Knjiga se prvo mora dodati na primarnu policu", HttpStatus.BAD_REQUEST);
+            }*/
             if(polica.isPrimarna()) {
                 if(knjigaService.findKnjigaOnPrimarna(loggedKorisnik.getId(), knjiga.getNaslov())) {
                     return new ResponseEntity<>("Knjiga vec postoji na primarnoj", HttpStatus.BAD_REQUEST);

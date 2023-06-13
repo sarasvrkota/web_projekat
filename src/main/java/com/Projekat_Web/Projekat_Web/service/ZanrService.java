@@ -24,4 +24,6 @@ public class ZanrService
         return this.zanrRepository.save(zanr);
     }
 
+    public Zanr getByNaziv(String naziv) { return this.zanrRepository.getByNaziv(naziv);}
+
 }

@@ -30,6 +30,8 @@ public class RecenzijaService {
         return this.recenzijaRepository.save(recenzija);
     }
 
+    public Recenzija getById(Long id) { return this.recenzijaRepository.getById(id);}
+
     public List<RecenzijaDto> pronadjiRecenzije(String naslovKnjige) {
         List<RecenzijaDto> recenzije = new ArrayList<>();
 

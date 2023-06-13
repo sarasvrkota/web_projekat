@@ -1,13 +1,18 @@
 package com.Projekat_Web.Projekat_Web.controller;
 
 import com.Projekat_Web.Projekat_Web.dto.KnjigaDto;
+import com.Projekat_Web.Projekat_Web.dto.KorisnikDto;
+import com.Projekat_Web.Projekat_Web.dto.LoginDto;
 import com.Projekat_Web.Projekat_Web.dto.RecenzijaDto;
 import com.Projekat_Web.Projekat_Web.entity.Knjiga;
+import com.Projekat_Web.Projekat_Web.entity.Korisnik;
 import com.Projekat_Web.Projekat_Web.entity.Recenzija;
 import com.Projekat_Web.Projekat_Web.entity.StavkaPolice;
 import com.Projekat_Web.Projekat_Web.service.KnjigaService;
+import com.Projekat_Web.Projekat_Web.service.KorisnikService;
 import com.Projekat_Web.Projekat_Web.service.RecenzijaService;
 import com.Projekat_Web.Projekat_Web.service.StavkaPoliceService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,6 +36,9 @@ public class RecenzijaRestController {
 
     @Autowired
     private StavkaPoliceService stavkaPoliceService;
+
+    @Autowired
+    private KorisnikService korisnikService;
 
 
     @GetMapping(value = "/sverecenzije",produces = MediaType.APPLICATION_JSON_VALUE)
@@ -82,4 +90,32 @@ public class RecenzijaRestController {
         return new ResponseEntity<>(recenzijeDto, HttpStatus.OK);
     }
 */
+
+    @PutMapping("/azuriraj-recenziju/{id}")
+    public ResponseEntity<String> azurirajRecenziju(@PathVariable Long id, @RequestBody RecenzijaDto recenzijaDTO, HttpSession session) {
+        // Provera da li je korisnik prijavljen
+        Korisnik prijavljeniKorisnik = (Korisnik) session.getAttribute("korisnik");
+        Korisnik logged = this.korisnikService.getById(prijavljeniKorisnik.getId());
+        Recenzija recenzija = this.recenzijaService.getById(id);
+        Korisnik korisnik = recenzija.getKorisnik();
+
+        if (prijavljeniKorisnik == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        //if(logged.getId().equals(korisnik.getId())) {
+
+            // Ažuriranje podataka recenzije
+            recenzija.setOcena(recenzijaDTO.getOcena());
+            recenzija.setTekst(recenzijaDTO.getTekst());
+            recenzija.setDatumRecenzije(recenzijaDTO.getDatumRecenzije());
+
+            recenzijaService.save(recenzija);
+
+            return new ResponseEntity<>("Recenzija uspešno ažurirana!", HttpStatus.OK);
+        //}
+
+        //return new ResponseEntity(HttpStatus.FORBIDDEN);
+
+    }
 }

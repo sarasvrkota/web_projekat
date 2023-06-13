@@ -56,17 +56,17 @@ public class ZahtevZaAktivacijuNalogaAutoraRestController {
     @PostMapping("/posalji-zahtev")
     public ResponseEntity<?> podnesiZahtevZaAktivaciju(@RequestBody ZahtevZaAktivacijuNalogaAutoraDto zahtevDto, HttpSession session) {
         Korisnik prijavljeniKorisnik = (Korisnik) session.getAttribute("korisnik");
-        if (prijavljeniKorisnik != null ) {
-            Korisnik loggedKorisnik = (Korisnik) session.getAttribute("employee");
-            String provera = (String) session.getAttribute("tip");
-            if(provera != null){
-                System.out.println("Korisnik je prijavljen!!!");
-            }
+       if (prijavljeniKorisnik == null ) {
+           /*Korisnik loggedKorisnik = (Korisnik) session.getAttribute("employee");
+           String provera = (String) session.getAttribute("tip");
+           if (provera != null) {
+               System.out.println("Korisnik je prijavljen!!!");
+           }*/
 
-            zahtevZaAktivacijuNalogaAutoraService.podnesiZahtevZaAktivaciju(zahtevDto, prijavljeniKorisnik);
-            return ResponseEntity.ok("Uspesno");
-        }
-        return ResponseEntity.ok("Nema korisnika");
+           zahtevZaAktivacijuNalogaAutoraService.podnesiZahtevZaAktivaciju(zahtevDto, prijavljeniKorisnik);
+           return ResponseEntity.ok("Uspesno");
+       }
+       return ResponseEntity.ok("Korisnik prijavljen");
     }
 
     @PostMapping("/odbij-zahtev/{id}")
@@ -133,7 +133,7 @@ public class ZahtevZaAktivacijuNalogaAutoraRestController {
     public ResponseEntity<List<ZahtevZaAktivacijuNalogaAutoraDto>> pregledSvihZahteva(HttpSession session) {
         Korisnik prijavljeniKorisnik = (Korisnik) session.getAttribute("korisnik");
 
-        if (prijavljeniKorisnik.getUloga() == Korisnik.Uloga.ADMINISTRATOR) {
+        if (prijavljeniKorisnik.getUloga().equals(Korisnik.Uloga.ADMINISTRATOR)) {
 
             List<ZahtevZaAktivacijuNalogaAutora> zahtevi = new ArrayList<>();
 

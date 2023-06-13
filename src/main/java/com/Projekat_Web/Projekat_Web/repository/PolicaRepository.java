@@ -1,6 +1,7 @@
 package com.Projekat_Web.Projekat_Web.repository;
 
 import com.Projekat_Web.Projekat_Web.entity.Polica;
+import com.Projekat_Web.Projekat_Web.entity.StavkaPolice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -18,4 +19,5 @@ public interface PolicaRepository extends JpaRepository<Polica, Long> {
     //public void delete(Polica polica);
     public Polica getById(Long id);
     Polica getByNaziv(String naziv);
+    Polica getByStavkaPolice(StavkaPolice stavkaPolice);
 }
