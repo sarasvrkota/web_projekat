@@ -188,11 +188,41 @@ public class KorisnikRestController {
         return new ResponseEntity<>(korisnikDto, HttpStatus.OK);
     }
 
-    @GetMapping("/police/{korisnikId}")
+    @GetMapping("/vrati-police/{korisnikId}")
     public ResponseEntity<List<KnjigaDto>> getPoliceKorisnika(@PathVariable String korisnikId) {
        // List<Knjiga> knjige = korisnikService.pregledajPoliceKorisnika(korisnikId);
 
         Optional<Korisnik> optionalKorisnik = korisnikService.findById(Long.valueOf(korisnikId));
+        if (optionalKorisnik.isPresent()) {
+            Korisnik korisnik = optionalKorisnik.get();
+            Set<Polica> police = korisnik.getPolice();
+            List<Knjiga> knjige = new ArrayList<>();
+            List<KnjigaDto> dtos = new ArrayList<>();
+
+            for (Polica polica : police) {
+                Set<StavkaPolice> stavke = polica.getStavkaPolice();
+                for (StavkaPolice stavka : stavke) {
+                    Knjiga knjiga = stavka.getKnjiga();
+                    knjige.add(knjiga);
+                    KnjigaDto dto = new KnjigaDto(stavka.getKnjiga());
+                    dtos.add(dto);
+                }
+
+            }
+
+            return new ResponseEntity<>(dtos, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/vrati-police-sesija")
+    public ResponseEntity<List<KnjigaDto>> getPoliceUlogovanogKorisnika(HttpSession session) {
+        // List<Knjiga> knjige = korisnikService.pregledajPoliceKorisnika(korisnikId);
+
+        Korisnik optKorisnik = (Korisnik)session.getAttribute("korisnik");
+
+        Optional<Korisnik> optionalKorisnik = korisnikService.findById(optKorisnik.getId());
         if (optionalKorisnik.isPresent()) {
             Korisnik korisnik = optionalKorisnik.get();
             Set<Polica> police = korisnik.getPolice();
@@ -393,12 +423,8 @@ public class KorisnikRestController {
                     return new ResponseEntity<>("Knjiga se prvo mora staviti na jednu od primarnih polica", HttpStatus.BAD_REQUEST);
                 }
             }
-
         }
-
         return new ResponseEntity<>("Vi niste taj korisnik", HttpStatus.UNAUTHORIZED);
-
-
     }
 
 
@@ -411,10 +437,10 @@ public class KorisnikRestController {
             return new ResponseEntity<>("Korisnik nije prijavljen", HttpStatus.UNAUTHORIZED);
         }
 
-        Knjiga knjiga = this.knjigaService.findByNaslov(naslov);
+        Knjiga knjiga = this.knjigaService.getByNaslov(naslov);
         Korisnik korisnik = this.korisnikService.getById(prijavljeniKorisnik.getId());
 
-        StavkaPolice targetStavka = null;
+        StavkaPolice targetStavka = new StavkaPolice();
 
         for (Polica polica : korisnik.getPolice()) {
             for (StavkaPolice stavka : polica.getStavkaPolice()) {

@@ -65,6 +65,17 @@ public class Autor extends Korisnik implements Serializable {
 
     public Autor() {}
 
+    public Autor(String ime, String prezime, String korisnickoIme, String mail, String lozinka) {
+        this.ime = ime;
+        this.prezime = prezime;
+        this.korisnickoIme = korisnickoIme;
+        this.mail = mail;
+        this.lozinka = lozinka;
+        this.jeAktivan = false;
+
+    }
+
+
 
 
 
