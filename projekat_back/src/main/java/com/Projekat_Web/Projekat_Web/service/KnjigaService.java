@@ -5,6 +5,7 @@ import com.Projekat_Web.Projekat_Web.entity.*;
 import com.Projekat_Web.Projekat_Web.repository.AutorRepository;
 import com.Projekat_Web.Projekat_Web.repository.KnjigaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,6 +27,12 @@ public class KnjigaService {
 
     @Autowired
     private AutorRepository autorRepository;
+
+    @Autowired
+    private StavkaPoliceService stavkaPoliceService;
+
+    @Autowired
+    private PolicaService policaService;
 
     public List<Knjiga> findAll(){
         return knjigaRepository.findAll();
@@ -78,7 +85,7 @@ public class KnjigaService {
 
             List<Autor> autori = autorRepository.findAll();
             Autor autorKnjige = new Autor();
-            for(Autor a : autori){
+            for(Autor a : autori) {
                 if (a.getSpisakKnjiga().contains(knjiga)){
                     autorKnjige = a;
                 }
@@ -94,6 +101,49 @@ public class KnjigaService {
 
     }
 
+    public void deleteKnjiga(Long citalac_id, Long policaId, Long knjigaId) throws ChangeSetPersister.NotFoundException {
+        Knjiga knjiga = knjigaRepository.getById(knjigaId);
+        Korisnik korisnik = korisnikService.findOne(citalac_id);
+        Polica polica = policaService.getById(policaId);
+        Set<Polica> korisnkovePolice = korisnik.getPolice();
+        if(polica.isPrimarna()) {
+            if(polica.getNaziv().equals("Read")) {
+                for(Polica p : korisnkovePolice) {
+                    if(p.getStavkaPolice().stream().anyMatch(stavka -> stavka.getKnjiga().equals(knjiga))) {
+                        for(StavkaPolice stavka : p.getStavkaPolice()) {
+                            if(stavka.getKnjiga().equals(knjiga)) {
+                                stavkaPoliceService.deleteStavkaPolice(p.getId(), stavka.getId());
+                            }
+                        }
+                    }
+                }
+            } else {
+                for(Polica p : korisnkovePolice) {
+                    if(p.getStavkaPolice().stream().anyMatch(stavka -> stavka.getKnjiga().equals(knjiga))) {
+                        for(StavkaPolice stavka : p.getStavkaPolice()) {
+                            if(stavka.getKnjiga().equals(knjiga)) {
+                                stavka.setKnjiga(null);
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+        else {
+            for(StavkaPolice stavka : polica.getStavkaPolice()) {
+                if(stavka.getKnjiga().equals(knjiga)) {
+                    stavkaPoliceService.deleteStavkaPolice(policaId, stavka.getId());
+                }
+            }
+        }
+
+
+
+
+        }
+
+    }
 
 
 
@@ -101,4 +151,4 @@ public class KnjigaService {
 
 
 
-}
+

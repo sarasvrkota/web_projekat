@@ -2,16 +2,20 @@ package com.Projekat_Web.Projekat_Web.controller;
 
 import com.Projekat_Web.Projekat_Web.dto.AutorDto;
 import com.Projekat_Web.Projekat_Web.dto.KnjigaDto;
+import com.Projekat_Web.Projekat_Web.dto.KorisnikDto;
 import com.Projekat_Web.Projekat_Web.entity.Autor;
 import com.Projekat_Web.Projekat_Web.entity.Knjiga;
 import com.Projekat_Web.Projekat_Web.entity.Korisnik;
+import com.Projekat_Web.Projekat_Web.entity.Polica;
 import com.Projekat_Web.Projekat_Web.service.AutorService;
 import com.Projekat_Web.Projekat_Web.service.KnjigaService;
 import com.Projekat_Web.Projekat_Web.service.KorisnikService;
+import com.Projekat_Web.Projekat_Web.service.PolicaService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +36,9 @@ public class AutorRestController {
 
     @Autowired
     private KorisnikService korisnikService;
+
+    @Autowired
+    private PolicaService policaService;
 
 
     @PostMapping(value = "/dodavanje-knjige")
@@ -111,6 +118,69 @@ public class AutorRestController {
         return ResponseEntity.ok("Autor nije azuriran!");
 
     }
+
+
+    @PostMapping(value = "/registruj-autora",consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AutorDto> napraviAutora(@RequestBody AutorDto autorDto, HttpSession session) throws Exception {
+
+        Korisnik optKorisnik = (Korisnik)session.getAttribute("korisnik");
+    if(optKorisnik.getUloga().equals(Korisnik.Uloga.ADMINISTRATOR)) {
+
+
+        if (korisnikService.findByMail(autorDto.getMail()) != null) {
+            throw new Exception("Adresa mora biti jedinstvena - korisnik vec postoji");
+        }
+
+        if (korisnikService.findByKorisnickoIme(autorDto.getKorisnickoIme()) != null) {
+            throw new Exception("Korisnicko ime vec postoji!!!");
+        }
+
+        /*if (!autorDto.getLozinka().equals(autorDto.getPotvrdaLozinke())) {
+            throw new Exception("Neispravna lozinka!!!");
+        }*/
+
+        Autor autor = new Autor(autorDto.getIme(),
+                autorDto.getPrezime(), autorDto.getKorisnickoIme(), autorDto.getMail(), autorDto.getLozinka());
+
+        //dodajPrimarnePolice(session);
+
+
+        Set<Polica> policee = new HashSet<>();
+        Polica polica1 = new Polica("Want to Read", true, new HashSet<>());
+        //korisnikk.getPolice().add(polica1);
+        policee.add(polica1);
+        policaService.save(polica1);
+
+
+        Polica polica2 = new Polica("Currently Reading", true, new HashSet<>());
+        policaService.save(polica2);
+        policee.add(polica2);
+        //korisnikk.getPolice().add(polica2);
+
+        Polica polica3 = new Polica("Read", true, new HashSet<>());
+        policee.add(polica3);
+        policaService.save(polica3);
+        //korisnikk.getPolice().add(polica3);
+
+        autor.setPolice(policee);
+        korisnikService.save(autor);
+
+
+        Autor noviAutor = this.autorService.save(autor);
+
+
+        AutorDto noviAutorDto = new AutorDto(noviAutor.getIme(), noviAutor.getPrezime(),
+                noviAutor.getMail(), noviAutor.getKorisnickoIme(), noviAutor.getDatumRodjenja(), noviAutor.getProfilnaSlika(),
+                noviAutor.getOpis(), noviAutor.getUloga(), noviAutor.isJeAktivan(), noviAutor.getSpisakKnjiga());
+        // videti sa sarom sta da prosledjujemo korisniku
+
+        return new ResponseEntity<>(noviAutorDto, HttpStatus.CREATED);
+    }
+    return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+    }
+
 
 
 

@@ -2,6 +2,7 @@ package com.Projekat_Web.Projekat_Web.dto;
 
 import com.Projekat_Web.Projekat_Web.entity.Autor;
 import com.Projekat_Web.Projekat_Web.entity.Knjiga;
+import com.Projekat_Web.Projekat_Web.entity.Korisnik;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -28,6 +29,8 @@ public class AutorDto {
     private boolean jeAktivan;
     private Set<Knjiga> spisakKnjiga = new HashSet<>();
 
+    public AutorDto() {}
+
     public AutorDto(String ime, String prezime, String korisnickoIme, String mail, String lozinka,
                     LocalDate datumRodjenja, String profilnaSlika, String opis, Autor.Uloga uloga, boolean jeAktivan, Set<Knjiga> spisakKnjiga) {
 
@@ -44,6 +47,8 @@ public class AutorDto {
         this.spisakKnjiga = spisakKnjiga;
     }
 
+
+
     public AutorDto(Autor autor) {
         this.ime = autor.getIme();
         this.prezime = autor.getPrezime();
@@ -56,5 +61,21 @@ public class AutorDto {
         this.uloga = autor.getUloga();
         this.jeAktivan = autor.isJeAktivan();
         this.spisakKnjiga = autor.getSpisakKnjiga();
+    }
+
+    public AutorDto(String ime, String prezime, String mail, String korisnickoIme,
+                    LocalDate datumRodjenja, String profilnaSlika, String opis, Korisnik.Uloga uloga,
+                    boolean jeAktivan, Set<Knjiga> spisakKnjiga) {
+
+        this.ime = ime;
+        this.prezime =prezime;
+        this.mail = mail;
+        this.korisnickoIme = korisnickoIme;
+        this.datumRodjenja = datumRodjenja;
+        this.profilnaSlika = profilnaSlika;
+        this.opis = opis;
+        this.uloga = uloga;
+        this.jeAktivan = jeAktivan;
+        this.spisakKnjiga = spisakKnjiga;
     }
 }
