@@ -1,0 +1,63 @@
+#app {
+  font-family: 'Arial', sans-serif;
+  text-align: center;
+  color: #333;
+}
+
+nav {
+ 
+  padding: 30px;
+}
+
+nav a {
+
+  font-weight: bold;
+  color: #337ab7;
+  text-decoration: none;
+}
+
+nav a.router-link-exact-active {
+  color: #42b983;
+}
+
+h2 {
+  color: #337ab7;
+}
+
+input[type="text"] {
+  border: 2px solid #337ab7;
+  padding: 10px;
+  font-size: 16px;
+  color: #333;
+}
+
+button {
+  background-color: #337ab7;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #42b983;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 20px;
+}
+
+h4 {
+  color: #337ab7;
+}
+
+p {
+  color: #333;
+  margin-bottom: 10px;
+}
