@@ -117,18 +117,24 @@ public class KorisnikRestController {
         Korisnik ulogovaniKorisnik = korisnikService.login(loginDto.getMail(), loginDto.getLozinka());
         if (ulogovaniKorisnik == null)
             return new ResponseEntity<>("User does not exist!", HttpStatus.NOT_FOUND);
-       /* if(ulogovaniKorisnik.getUloga() == Korisnik.Uloga.AUTOR) {
-            session.setAttribute("autor", ulogovaniKorisnik);
-        }
 
-
-        if(ulogovaniKorisnik.getUloga() == Korisnik.Uloga.AUTOR) {
-            session.setAttribute("administrator", ulogovaniKorisnik);
-        }*/
 
         session.setAttribute("korisnik", ulogovaniKorisnik);
         //dodajPrimarnePolice(session);
-        return ResponseEntity.ok("Successfully logged in!");
+        return ResponseEntity.ok("{}");
+    }
+
+    @GetMapping("/getUserRole")
+    public ResponseEntity<String> getUserRole(HttpSession session) {
+        Korisnik korisnik = (Korisnik) session.getAttribute("korisnik");
+        if (korisnik == null) {
+            return new ResponseEntity<>("User not logged in", HttpStatus.UNAUTHORIZED);
+        }
+
+        // Dobavljanje uloge korisnika
+        String userRole = korisnik.getUloga().toString(); // Pretpostavka da uloga korisnika ima toString() metodu
+
+        return ResponseEntity.ok(userRole);
     }
 
     @PostMapping("/logout")

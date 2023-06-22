@@ -63,37 +63,28 @@ public class StavkaPoliceRestController {
 
 
     @GetMapping("/recenzije/{naslov}")
-    public ResponseEntity<List<RecenzijaDto>> getRecenzijaZaKnjigu(@PathVariable String naslov) {
+    public ResponseEntity<List<RecenzijaDto>> getRecenzijeZaKnjigu(@PathVariable String naslov) {
         Knjiga knjiga = knjigaService.findByNaslov(naslov);
+        List<StavkaPolice> stavke = stavkaPoliceService.findAllByKnjiga(knjiga);
 
-
-        List<StavkaPolice> stavkePolice = stavkaPoliceService.findByKnjiga(knjiga);
-
-            //StavkaPolice stavkaPolice = optionalStavkaPolice.get();
-
-
-            List<StavkaPolice> stavke = this.stavkaPoliceService.findAllByKnjiga(knjiga);
-
-            List<Recenzija> recenzije = new ArrayList<>();
-            for(StavkaPolice s : stavke) {
-                recenzije.add(s.getRecenzija());
+        List<Recenzija> recenzije = new ArrayList<>();
+        for (StavkaPolice stavka : stavke) {
+            if (stavka.getRecenzija() != null) {
+                recenzije.add(stavka.getRecenzija());
             }
+        }
 
-            List<RecenzijaDto> recenzijeDto = new ArrayList<>();
-            for(Recenzija r : recenzije) {
-                RecenzijaDto dto = new RecenzijaDto(r);
-                recenzijeDto.add(dto);
-            }
+        List<RecenzijaDto> recenzijeDto = new ArrayList<>();
+        for (Recenzija recenzija : recenzije) {
+            RecenzijaDto dto = new RecenzijaDto(recenzija);
+            recenzijeDto.add(dto);
+        }
 
-            if(recenzijeDto.isEmpty()) {
-                return ResponseEntity.noContent().build();
-            }
+        if (recenzijeDto.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
 
-            return new ResponseEntity<>(recenzijeDto, HttpStatus.OK);
-
-
-
-        //return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(recenzijeDto, HttpStatus.OK);
     }
 
 
