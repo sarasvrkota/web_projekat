@@ -15,6 +15,8 @@ import Administrator from  '../views/Administrator.vue';
 import Autor from  '../views/Autor.vue';
 import dodavanjeKnjige from  '../views/dodavanjeKnjige.vue';
 import dodavanjeKnjigeAutor from  '../views/dodavanjeKnjigeAutor.vue';
+import Aktivacija from  '../views/Aktivacija.vue';
+import dodajPolicuAutor from  '../views/dodajPolicuAutor.vue';
 const routes = [
   {
     path: '/',
@@ -88,10 +90,22 @@ const routes = [
   name: 'Administrator',
   component: Administrator
 },
+{ //kada se loginuje prebaci se na ovu putanju
+  path: '/zahtevi',
+  name: 'Aktivacija',
+  component: Aktivacija
+},
+
+
 {
   path: '/dodaj-novu-policu',
   name: 'dodaj-novu-policu',
   component: DodajNovuPolicu
+},
+{
+  path: '/dodaj-novu-policu-autor',
+  name: 'dodaj-novu-policu-autor',
+  component: dodajPolicuAutor
 },
 {
   path: '/azuriraj-profil',

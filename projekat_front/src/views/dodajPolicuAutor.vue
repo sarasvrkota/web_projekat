@@ -26,7 +26,7 @@
     })
     .then(response => {
       if (response.ok) {
-        this.$router.push('citalac');
+        this.$router.push('autor');
       } else {
         throw new Error('Neuspesno dodavanje nove police!');
       }

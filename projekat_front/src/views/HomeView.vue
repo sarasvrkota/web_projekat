@@ -12,6 +12,9 @@
         <td>
           <button class="full-width-button" @click="pregledajSveZanrove">Pregledaj sve zanrove</button>
         </td>
+        <td>
+          <button class="full-width-button" @click="posaljiZahtev">Posalji zahtev</button>
+        </td>
        
       </tr>
     </table>
@@ -100,7 +103,9 @@ export default {
       prezime: '',
       profil: null,
       police: [],
-      recenzije: [], // Dodajte ovu liniju
+  
+      recenzije: [], 
+      email: '', 
     };
   },
   methods: {
@@ -160,6 +165,9 @@ export default {
     },
     pregledajSveZanrove() {
       this.$router.push('/svi-zanrovi');
+    },
+    posaljiZahtev() {
+      this.$router.push('/zahtevi');
     },
     
     getPoliceKorisnika(korisnikId) {

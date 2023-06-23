@@ -53,7 +53,7 @@ public class ZahtevZaAktivacijuNalogaAutoraRestController {
     }
 
 
-    @PostMapping("/posalji-zahtev")
+   /*@PostMapping("/posalji-zahtev")
     public ResponseEntity<?> podnesiZahtevZaAktivaciju(@RequestBody ZahtevZaAktivacijuNalogaAutoraDto zahtevDto, HttpSession session) {
         Korisnik prijavljeniKorisnik = (Korisnik) session.getAttribute("korisnik");
         if (prijavljeniKorisnik != null ) {
@@ -67,8 +67,32 @@ public class ZahtevZaAktivacijuNalogaAutoraRestController {
             return ResponseEntity.ok("Uspesno");
         }
         return ResponseEntity.ok("Nema korisnika");
-    }
+    }*/
+    @PostMapping("/posalji-zahtev")
+    public ResponseEntity<?> podnesiZahtevZaAktivaciju(@RequestBody ZahtevZaAktivacijuNalogaAutoraDto zahtevDto, HttpSession session) {
+        Korisnik prijavljeniKorisnik = (Korisnik) session.getAttribute("korisnik");
+        if (prijavljeniKorisnik != null ) {
+            Korisnik loggedKorisnik = (Korisnik) session.getAttribute("employee");
+            String provera = (String) session.getAttribute("tip");
+            if(provera != null){
+                System.out.println("Korisnik je prijavljen!!!");
+            }
 
+            zahtevZaAktivacijuNalogaAutoraService.podnesiZahtevZaAktivaciju(zahtevDto, prijavljeniKorisnik);
+            return ResponseEntity.ok("{\"message\": \"Uspesno\"}");
+        }
+        return ResponseEntity.ok("{\"message\": \"Nema korisnika\"}");
+    }
+ /*  @PostMapping("/posalji-zahtev")
+   public ResponseEntity<?> podnesiZahtevZaAktivaciju(@RequestBody ZahtevZaAktivacijuNalogaAutoraDto zahtevDto, HttpSession session) {
+       Korisnik prijavljeniKorisnik = (Korisnik) session.getAttribute("korisnik");
+       if (prijavljeniKorisnik != null) {
+           return ResponseEntity.ok("Nema korisnika");
+       }
+
+       zahtevZaAktivacijuNalogaAutoraService.podnesiZahtevZaAktivaciju(zahtevDto, prijavljeniKorisnik);
+       return ResponseEntity.ok("Uspesno");
+   }*/
     @PostMapping("/odbij-zahtev/{id}")
     public ResponseEntity<?> odbijZahtev(@PathVariable("id") Long id, HttpSession session) {
         Korisnik prijavljeniKorisnik = (Korisnik) session.getAttribute("korisnik");

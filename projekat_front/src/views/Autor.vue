@@ -14,6 +14,11 @@
       <button type="submit">Pošalji zahtev</button>
     </form>
     <button @click="preusmeriNaNovuKnjiguA">Dodaj novu knjigu</button>
+    <button @click="pregledZanrova">Pregledaj zanrove</button>
+    <button @click="pregledKnjiga">Pregledaj knjige</button>
+    <button @click="dodajNovuPolicu">Dodaj Novu Policu</button>
+    
+   
   </div>
 </template>
 
@@ -29,7 +34,8 @@ export default {
       zahtev: {
         email: '',
         telefon: '',
-        poruka: ''
+        poruka: '',
+       
       }
     };
   },
@@ -70,12 +76,26 @@ export default {
             alert('Došlo je do greške prilikom slanja zahteva!');
           });
       } else {
-        alert('Niste prijavljeni.');
+        alert('Prijavljeni ste ne mozete podneti zahtev!!.');
       }
     },
     preusmeriNaNovuKnjiguA() {
       this.$router.push('/dodavanje-knjige-autor');
-    }
+    },
+    pregledZanrova(){
+
+      this.$router.push('/svi-zanrovi');
+    },
+    pregledKnjiga(){
+
+   this.$router.push('/sveknjige');
+  },
+  dodajNovuPolicu(){
+
+    this.$router.push('/dodaj-novu-policu-autor');
+  }
+  
+    
   }
 };
 </script>
