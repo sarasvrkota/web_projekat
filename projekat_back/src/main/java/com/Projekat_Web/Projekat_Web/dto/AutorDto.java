@@ -65,7 +65,7 @@ public class AutorDto {
 
     public AutorDto(String ime, String prezime, String mail, String korisnickoIme,
                     LocalDate datumRodjenja, String profilnaSlika, String opis, Korisnik.Uloga uloga,
-                    boolean jeAktivan, Set<Knjiga> spisakKnjiga) {
+                    boolean jeAktivan) {
 
         this.ime = ime;
         this.prezime =prezime;
@@ -76,6 +76,6 @@ public class AutorDto {
         this.opis = opis;
         this.uloga = uloga;
         this.jeAktivan = jeAktivan;
-        this.spisakKnjiga = spisakKnjiga;
+        //this.spisakKnjiga = spisakKnjiga;
     }
 }

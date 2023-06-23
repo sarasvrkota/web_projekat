@@ -47,15 +47,15 @@ public class AutorService {
 
             korisnikRepository.save(korisnik);
 
-            autor.setIme(autorDto.getIme());
+            /*autor.setIme(autorDto.getIme());
             autor.setPrezime(autorDto.getPrezime());
             autor.setMail(autorDto.getMail());
             autor.setKorisnickoIme(autorDto.getKorisnickoIme());
             autor.setDatumRodjenja(autorDto.getDatumRodjenja());
             autor.setProfilnaSlika(autorDto.getProfilnaSlika());
             autor.setOpis(autorDto.getOpis());
-            autor.setUloga(autorDto.getUloga());
-            autor.setJeAktivan(autorDto.isJeAktivan());
+            autor.setUloga(autorDto.getUloga());*/
+            autor.setJeAktivan(true);
 
             autorRepository.save(autor);
         }

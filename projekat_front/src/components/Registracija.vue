@@ -1,69 +1,76 @@
 <template>
-  <div>
-    <h1>Registracija</h1>
-    <form @submit="registrujKorisnika">
-      <label for="ime">Ime:</label>
-      <input type="text" id="ime" v-model="korisnik.ime" required>
-      
-      <label for="prezime">Prezime:</label>
-      <input type="text" id="prezime" v-model="korisnik.prezime" required>
-      
-      <label for="korisnickoIme">Korisničko ime:</label>
-      <input type="text" id="korisnickoIme" v-model="korisnik.korisnickoIme" required>
-      
-      <label for="mail">Email:</label>
-      <input type="email" id="mail" v-model="korisnik.mail" required>
-      
-      <label for="lozinka">Lozinka:</label>
-      <input type="password" id="lozinka" v-model="korisnik.lozinka" required>
-      
-      <label for="potvrdaLozinke">Potvrda lozinke:</label>
-      <input type="password" id="potvrdaLozinke" v-model="korisnik.potvrdaLozinke" required>
-      
-      <button type="submit">Registruj se</button>
-    </form>
+  <div class="pre-reg">
+    <div class="container4">
+      <section class="register-section">
+        <form>
+          <div class="row7">
+            <h2>Registracija</h2>
+          </div>
+          <div class="row8">
+            <input type="text" placeholder="name" v-model="ime">
+          </div>
+          <div class="row9">
+            <input type="text" placeholder="surname" v-model="prezime">
+          </div>
+          <div class="row10">
+            <input type="text" placeholder="username" v-model="korisnickoIme">
+          </div>
+          <div class="row11">
+            <input type="email" placeholder="email" v-model="mail">
+          </div>
+          <div class="row12">
+            <input type="password" placeholder="password" v-model="lozinka">
+          </div>
+          <div class="row13">
+            <input type="password" placeholder="repeat password" v-model="potrvdaLozinke">
+          </div>
+          <div class="row14">
+          <button @click="submit">Registruj se</button>
+        </div>
+      </form>
+    </section>
   </div>
+</div>
 </template>
 
 <script>
-export default {
-  name: 'Registracija',
-  data() {
-    return {
-      korisnik: {
-        ime: '',
-        prezime: '',
-        korisnickoIme: '',
-        mail: '',
-        lozinka: '',
-        potvrdaLozinke: ''
-      }
-    };
-  },
-  methods: {
-    registrujKorisnika(event) {
-      event.preventDefault();
+import axios from 'axios';
 
-      fetch('http://localhost:7070/api/korisnici/registracija', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(this.korisnik)
+export default {
+name: 'RegisterSection',
+data() {
+  return {
+    ime: '',
+    prezime: '',
+    korisnickoIme: '',
+    mail: '',
+    lozinka: '',
+    potrvdaLozinke: ''
+  };
+},
+methods: {
+  register() {
+    const payload = {
+      ime: this.ime,
+      prezime: this.prezime,
+      korisnickoIme: this.korisnickoIme,
+      mail: this.mail,
+      lozinka: this.lozinka,
+      potrvdaLozinke: this.potrvdaLozinke
+    };
+
+    axios
+      .post("http://localhost:7070/api/korisnici/registracija", payload)
+      .then((res) => {
+        console.log(res);
+        // Emit the 'register' event upon successful registration
+        this.$emit('/login');
       })
-        .then(response => {
-          if (response.ok) {
-            alert('Uspešno ste se registrovali!');
-            this.$router.push('/login');
-          } else {
-            throw new Error('Neuspešna registracija');
-          }
-        })
-        .catch(error => {
-          console.error(error);
-          alert('Došlo je do greške prilikom registracije.');
-        });
-    }
+      .catch((err) => {
+        console.log(err);
+        alert("Something went wrong!");
+      });
   }
-};
+}
+}
 </script>

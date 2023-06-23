@@ -89,7 +89,7 @@ export default {
   methods: {
     getPolicePrijavljenogKorisnika() {
       fetch('http://localhost:7070/api/korisnici/primarne-police', {
-        method: 'GET',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },

@@ -110,6 +110,7 @@ public class AutorRestController {
     @PutMapping("/azuriraj-autora/{id}")
     public ResponseEntity<?> azurirajProfilAutora(@PathVariable Long id, @RequestBody AutorDto autorDto,  HttpSession session) {
         Autor prijavljeniKorisnik = (Autor) session.getAttribute("korisnik");
+        Autor autor = this.autorService.getById(id);
         if (prijavljeniKorisnik != null && prijavljeniKorisnik.getUloga().equals(Korisnik.Uloga.ADMINISTRATOR)) {
             autorService.azurirajProfilAutora(id, autorDto);
 
@@ -120,25 +121,14 @@ public class AutorRestController {
     }
 
 
-    @PostMapping(value = "/registruj-autora",consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AutorDto> napraviAutora(@RequestBody AutorDto autorDto, HttpSession session) throws Exception {
+   /* @PostMapping(value = "/registruj-autora/{id}")
+    public ResponseEntity<AutorDto> azurirajProfilAutora(@PathVariable Long id, HttpSession session) throws Exception {
 
         Korisnik optKorisnik = (Korisnik)session.getAttribute("korisnik");
+        Autor autor1 = this.autorService.getById(id);
+        AutorDto autorDto = new AutorDto(autor1);
     if(optKorisnik.getUloga().equals(Korisnik.Uloga.ADMINISTRATOR)) {
 
-
-        if (korisnikService.findByMail(autorDto.getMail()) != null) {
-            throw new Exception("Adresa mora biti jedinstvena - korisnik vec postoji");
-        }
-
-        if (korisnikService.findByKorisnickoIme(autorDto.getKorisnickoIme()) != null) {
-            throw new Exception("Korisnicko ime vec postoji!!!");
-        }
-
-        /*if (!autorDto.getLozinka().equals(autorDto.getPotvrdaLozinke())) {
-            throw new Exception("Neispravna lozinka!!!");
-        }*/
 
         Autor autor = new Autor(autorDto.getIme(),
                 autorDto.getPrezime(), autorDto.getKorisnickoIme(), autorDto.getMail(), autorDto.getLozinka());
@@ -172,14 +162,53 @@ public class AutorRestController {
 
         AutorDto noviAutorDto = new AutorDto(noviAutor.getIme(), noviAutor.getPrezime(),
                 noviAutor.getMail(), noviAutor.getKorisnickoIme(), noviAutor.getDatumRodjenja(), noviAutor.getProfilnaSlika(),
-                noviAutor.getOpis(), noviAutor.getUloga(), noviAutor.isJeAktivan(), noviAutor.getSpisakKnjiga());
+                noviAutor.getOpis(), noviAutor.getUloga(), true);
         // videti sa sarom sta da prosledjujemo korisniku
 
         return new ResponseEntity<>(noviAutorDto, HttpStatus.CREATED);
     }
     return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
-    }
+    }*/
+
+
+    @PostMapping(value = "/registruj-autora/{id}")
+    public ResponseEntity<?> azurirajProfilAutora(@PathVariable Long id, HttpSession session) throws Exception {
+        Korisnik optKorisnik = (Korisnik)session.getAttribute("korisnik");
+        Autor autor1 = this.autorService.getById(id);
+        if(optKorisnik.getUloga().equals(Korisnik.Uloga.ADMINISTRATOR) && autor1.isJeAktivan() == false) {
+
+            autor1.setJeAktivan(true);
+
+            Set<Polica> policee = new HashSet<>();
+            Polica polica1 = new Polica("Want to Read", true, new HashSet<>());
+            //korisnikk.getPolice().add(polica1);
+            policee.add(polica1);
+            policaService.save(polica1);
+
+
+            Polica polica2 = new Polica("Currently Reading", true, new HashSet<>());
+            policaService.save(polica2);
+            policee.add(polica2);
+            //korisnikk.getPolice().add(polica2);
+
+            Polica polica3 = new Polica("Read", true, new HashSet<>());
+            policee.add(polica3);
+            policaService.save(polica3);
+            //korisnikk.getPolice().add(polica3);
+
+            autor1.setPolice(policee);
+            korisnikService.save(autor1);
+
+
+            Autor noviAutor = this.autorService.save(autor1);
+
+
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+        }
 
 
 

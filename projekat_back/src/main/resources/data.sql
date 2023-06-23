@@ -10,7 +10,7 @@ INSERT INTO zanr (naziv) VALUES ('edukativni');
 
 INSERT INTO autor (je_aktivan, korisnikk_id) VALUES (1, 2);
 INSERT INTO autor (je_aktivan, korisnikk_id) VALUES (1, 3);
-INSERT INTO autor (je_aktivan, korisnikk_id) VALUES (0, 5);
+INSERT INTO autor (je_aktivan, korisnikk_id) VALUES (0, 6);
 
 
 
@@ -41,4 +41,4 @@ INSERT INTO korisnik_police(korisnik_korisnikk_id, police_id) VALUES (5, 5);
 
 INSERT INTO polica_stavka_police(polica_id, stavka_police_id) VALUES (1, 1);
 INSERT INTO zahtev_za_aktivaciju_naloga_autora (email, telefon, poruka, datum, status, autor_korisnikk_id) VALUES ('nsdespot@gmail.com', '0645541596', 'zahtev', '2022-01-02', 'ODOBREN', 2);
-INSERT INTO zahtev_za_aktivaciju_naloga_autora (email, telefon, poruka, datum, status, autor_korisnikk_id) VALUES ('marko@gmail.com', '666', 'jupi', '2022-01-02', 'NA_CEKANJU', 5);
+INSERT INTO zahtev_za_aktivaciju_naloga_autora (email, telefon, poruka, datum, status, autor_korisnikk_id) VALUES ('marko@gmail.com', '666', 'jupi', '2022-01-02', 'NA_CEKANJU', 6);
