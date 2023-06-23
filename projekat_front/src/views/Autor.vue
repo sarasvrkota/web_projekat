@@ -60,7 +60,7 @@ export default {
         })
         .catch((error) => {
           console.error(error);
-          alert('Došlo je do greške prilikom slanja zahteva!');
+          alert('Došlo je do greške prilikom slanja zahteva!!!');
         });
     },
     preusmeriNaNovuKnjiguA() {
