@@ -88,7 +88,7 @@ export default {
 .login-button {
   background-color: #42b983;
   color: white;
-  padding: 10px 20px;
+  padding: 5px 10px;
   border: none;
   border-radius: 5px;
   cursor: pointer;

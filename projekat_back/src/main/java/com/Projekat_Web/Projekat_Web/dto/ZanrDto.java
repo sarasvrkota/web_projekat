@@ -3,7 +3,7 @@ package com.Projekat_Web.Projekat_Web.dto;
 import com.Projekat_Web.Projekat_Web.entity.Zanr;
 import lombok.*;
 
-@Getter @Setter @ToString
+@Getter @Setter @ToString @NoArgsConstructor
 public class ZanrDto {
 
     private String naziv;

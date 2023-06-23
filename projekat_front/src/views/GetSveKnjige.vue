@@ -8,6 +8,7 @@
           <p>Datum objavljivanja: {{knjiga.datumObjavljivanja}}</p>
           <p>Opis: {{knjiga.opis}}</p>
           <p>Ocena: {{knjiga.ocena}}</p>
+          <p>Zanr: {{knjiga.zanr}}</p>
         </li>
       </ul>
     </div>

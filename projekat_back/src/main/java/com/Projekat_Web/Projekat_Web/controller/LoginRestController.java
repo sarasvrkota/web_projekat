@@ -13,18 +13,5 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class LoginRestController {
     @Autowired
     private KorisnikService korisnikService;
-    @PostMapping("/api/korisnici/login")
-    public ResponseEntity<String> login(@RequestBody LoginDto loginDto, HttpSession session){
-        // proverimo da li su podaci validni
-        if((loginDto.getMail() != null && loginDto.getMail().isEmpty()) || loginDto.getLozinka().isEmpty())
-            return new ResponseEntity("Neispravni podaci za prijavu", HttpStatus.BAD_REQUEST);
 
-        Korisnik prijavljeniKorisnik = korisnikService.login(loginDto.getMail(), loginDto.getLozinka());
-        if (prijavljeniKorisnik == null)
-            return new ResponseEntity<>("Korisnik ne postoji!", HttpStatus.NOT_FOUND);
-
-
-        session.setAttribute("korisnik", prijavljeniKorisnik);
-        return ResponseEntity.ok("{\"message\": \"Uspesna prijava!\"}");
-    }
 }

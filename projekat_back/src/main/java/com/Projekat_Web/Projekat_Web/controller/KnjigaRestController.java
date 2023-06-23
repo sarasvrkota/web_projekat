@@ -100,7 +100,7 @@ public class KnjigaRestController {
     @PostMapping("/dodavanje-knjiga-admin")
     public ResponseEntity<?> dodajKnjigu(@RequestBody KnjigaDto knjigaDto, HttpSession session) {
         Korisnik prijavljeniKorisnik = (Korisnik) session.getAttribute("korisnik");
-        if (prijavljeniKorisnik != null && prijavljeniKorisnik.getUloga().equals(Korisnik.Uloga.ADMINISTRATOR)) {
+        if (prijavljeniKorisnik != null && prijavljeniKorisnik.getUloga().equals(Korisnik.Uloga.ADMINISTRATOR) ){
             Knjiga knjiga = new Knjiga();
             knjiga.setNaslov(knjigaDto.getNaslov());
             knjiga.setNaslovnaFotografija(knjigaDto.getNaslovnaFotografija());

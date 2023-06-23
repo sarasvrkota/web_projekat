@@ -23,4 +23,5 @@ public interface KorisnikRepository extends JpaRepository<Korisnik, Long> {
     List<Korisnik> findByImeAndPrezime( String ime, String prezime);
 
 
+    Korisnik getByMail(String mejlAdresa);
 }

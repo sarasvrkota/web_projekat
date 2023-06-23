@@ -9,10 +9,10 @@
         <td>
           <button class="full-width-button" @click="pregledajSveKnjige">Pregledaj sve knjige</button>
         </td>
-     
         <td>
           <button class="full-width-button" @click="pregledajSveZanrove">Pregledaj sve zanrove</button>
         </td>
+       
       </tr>
     </table>
   </div>
@@ -28,15 +28,29 @@
       <h3>Profil korisnika</h3>
       <p>Ime: {{ profil.ime }}</p>
       <p>Prezime: {{ profil.prezime }}</p>
-      <p>Datum rodjenja: {{ profil.datumRodjenja }}</p>
+      <p>Datum rođenja: {{ profil.datumRodjenja }}</p>
       <p>Opis: {{ profil.opis }}</p>
       <p>Uloga: {{ profil.uloga }}</p>
- 
     </div>
     <div v-else>
-  <p>Profil nije pronađen.</p>
-</div>
+      <p>Profil nije pronađen.</p>
+    </div>
   </div>
+
+  <div>
+  
+      <h3>Police korisnika:</h3>
+      <ul>
+        <li v-for="polica in police" :key="polica.policaId">
+          <h4>{{ polica.naziv }}</h4>
+        
+        </li>
+      </ul>
+        <li v-for="polica in police" :key="polica.id">
+          {{polica.primarna ? 'Da' : 'Ne'}}
+          </li>
+    </div> 
+
 
   <div>
     <h2>Pretraga knjiga</h2>
@@ -55,7 +69,7 @@
           <h4>{{ knjiga.naslov }}</h4>
           <p>Broj strana: {{ knjiga.brojStrana }}</p>
           <p>Opis: {{ knjiga.opis }}</p>
-          <p>Zanr: {{ knjiga.zanr }}</p>
+          <p>Žanr: {{ knjiga.zanr }}</p>
           <p>Ocena: {{ knjiga.ocena }}</p>
           <router-link :to="'/recenzije/' + knjiga.naslov">Pregledaj recenzije za knjigu</router-link>
         </li>
@@ -85,6 +99,8 @@ export default {
       ime: '',
       prezime: '',
       profil: null,
+      police: [],
+      recenzije: [], // Dodajte ovu liniju
     };
   },
   methods: {
@@ -123,14 +139,17 @@ export default {
         .then((data) => {
           if (data.length > 0) {
             this.profil = data[0]; // Prikazujemo samo prvi pronađeni profil
+            this.getPoliceKorisnika(this.profil.korisnikId);
           } else {
             this.profil = null;
+            this.police = [];
             console.log('Profil nije pronađen');
           }
         })
         .catch((error) => {
           console.error(error);
           this.profil = null;
+          this.police = [];
         });
     },
     pregledajSveKnjige() {
@@ -141,6 +160,24 @@ export default {
     },
     pregledajSveZanrove() {
       this.$router.push('/svi-zanrovi');
+    },
+    
+    getPoliceKorisnika(korisnikId) {
+      fetch(`http://localhost:7070/api/korisnici/vrati-police/1`)
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error('Failed to fetch user shelves');
+          }
+        })
+        .then((data) => {
+          this.police = data;
+        })
+        .catch((error) => {
+          console.error(error);
+          this.police = [];
+        });
     },
   },
 };

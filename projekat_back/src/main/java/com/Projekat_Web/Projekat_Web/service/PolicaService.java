@@ -1,9 +1,10 @@
 package com.Projekat_Web.Projekat_Web.service;
 
-import com.Projekat_Web.Projekat_Web.entity.Knjiga;
-import com.Projekat_Web.Projekat_Web.entity.Korisnik;
-import com.Projekat_Web.Projekat_Web.entity.Polica;
-import com.Projekat_Web.Projekat_Web.entity.StavkaPolice;
+import com.Projekat_Web.Projekat_Web.dto.KnjigaDto;
+import com.Projekat_Web.Projekat_Web.dto.PolicaDto;
+import com.Projekat_Web.Projekat_Web.dto.StavkaPoliceDto;
+import com.Projekat_Web.Projekat_Web.dto.ZanrDto;
+import com.Projekat_Web.Projekat_Web.entity.*;
 import com.Projekat_Web.Projekat_Web.repository.KnjigaRepository;
 import com.Projekat_Web.Projekat_Web.repository.KorisnikRepository;
 import com.Projekat_Web.Projekat_Web.repository.PolicaRepository;
@@ -12,8 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class PolicaService {
@@ -65,4 +65,7 @@ public class PolicaService {
 
         return stavkaPolice.getId();
     }
+
+
+
 }

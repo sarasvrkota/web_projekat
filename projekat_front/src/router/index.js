@@ -9,6 +9,12 @@ import Registracija from '../components/Registracija.vue';
 import Login from '../components/Login.vue';
 import Logout from '../components/Logout.vue';
 import Citalac from '../views/Citalac.vue';
+import DodajNovuPolicu from '../views/DodajNovuPolicu.vue';
+import AzurirajProfil from  '../views/AzurirajProfil.vue';
+import Administrator from  '../views/Administrator.vue';
+import Autor from  '../views/Autor.vue';
+import dodavanjeKnjige from  '../views/dodavanjeKnjige.vue';
+import dodavanjeKnjigeAutor from  '../views/dodavanjeKnjigeAutor.vue';
 const routes = [
   {
     path: '/',
@@ -60,14 +66,45 @@ const routes = [
 },
 { //radi
   path: '/logout',
-  name: 'Logout',
+  name: 'LogoutButton',
   component: Logout
 },
 { //kada se loginuje prebaci se na ovu putanju
   path: '/citalac',
   name: 'Citalac',
   component: Citalac
-}
+},
+{ //kada se loginuje prebaci se na ovu putanju
+  path: '/autor',
+  name: 'Autor',
+  component: Autor
+},
+{ //kada se loginuje prebaci se na ovu putanju
+  path: '/administrator',
+  name: 'Administrator',
+  component: Administrator
+},
+{
+  path: '/dodaj-novu-policu',
+  name: 'dodaj-novu-policu',
+  component: DodajNovuPolicu
+},
+{
+  path: '/azuriraj-profil',
+  name: 'azuriraj-profil',
+  component: AzurirajProfil
+},
+{ //kada se loginuje prebaci se na ovu putanju
+  path: '/dodavanje-knjige-admin',
+  name: 'dodavanje-knjige-admin',
+  component: dodavanjeKnjige
+},
+{ //kada se loginuje prebaci se na ovu putanju
+  path: '/dodavanje-knjige-autor',
+  name: 'dodavanje-knjige-autor',
+  component: dodavanjeKnjigeAutor
+},
+
 ]
 
 const router = createRouter({

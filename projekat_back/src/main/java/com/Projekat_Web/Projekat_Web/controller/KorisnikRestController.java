@@ -105,10 +105,23 @@ public class KorisnikRestController {
 
     }
 
-
-
-
     @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody LoginDto loginDto, HttpSession session){
+        // proverimo da li su podaci validni
+        if((loginDto.getMail() != null && loginDto.getMail().isEmpty()) || loginDto.getLozinka().isEmpty())
+            return new ResponseEntity("Neispravni podaci za prijavu", HttpStatus.BAD_REQUEST);
+
+        Korisnik prijavljeniKorisnik = korisnikService.login(loginDto.getMail(), loginDto.getLozinka());
+        if (prijavljeniKorisnik == null)
+            return new ResponseEntity<>("Korisnik ne postoji!", HttpStatus.NOT_FOUND);
+
+
+        session.setAttribute("korisnik", prijavljeniKorisnik);
+        return ResponseEntity.ok("{\"message\": \"Uspesna prijava!\"}");
+    }
+
+
+    /*@PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginDto loginDto, HttpSession session){
         // proverimo da li su podaci validni
         if(loginDto.getMail().isEmpty() || loginDto.getLozinka().isEmpty())
@@ -122,7 +135,7 @@ public class KorisnikRestController {
         session.setAttribute("korisnik", ulogovaniKorisnik);
         //dodajPrimarnePolice(session);
         return ResponseEntity.ok("{}");
-    }
+    }*/
 
     @GetMapping("/getUserRole")
     public ResponseEntity<String> getUserRole(HttpSession session) {
@@ -196,13 +209,13 @@ public class KorisnikRestController {
 
     @GetMapping("/vrati-police/{korisnikId}")
     public ResponseEntity<List<KnjigaDto>> getPoliceKorisnika(@PathVariable String korisnikId) {
-       // List<Knjiga> knjige = korisnikService.pregledajPoliceKorisnika(korisnikId);
+       List<Knjiga> knjige = korisnikService.pregledajPoliceKorisnika(korisnikId);
 
         Optional<Korisnik> optionalKorisnik = korisnikService.findById(Long.valueOf(korisnikId));
         if (optionalKorisnik.isPresent()) {
             Korisnik korisnik = optionalKorisnik.get();
             Set<Polica> police = korisnik.getPolice();
-            List<Knjiga> knjige = new ArrayList<>();
+          //  List<Knjiga> knjige = new ArrayList<>();
             List<KnjigaDto> dtos = new ArrayList<>();
 
             for (Polica polica : police) {
@@ -222,9 +235,9 @@ public class KorisnikRestController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/vrati-police-sesija")
-    public ResponseEntity<List<KnjigaDto>> getPoliceUlogovanogKorisnika(HttpSession session) {
-        // List<Knjiga> knjige = korisnikService.pregledajPoliceKorisnika(korisnikId);
+    @GetMapping("/vrati-police-sesija/{korisnikId}")
+    public ResponseEntity<List<KnjigaDto>> getPoliceUlogovanogKorisnika(@PathVariable Long korisnikId, HttpSession session) {
+       //  List<Knjiga> knjige = korisnikService.pregledajPoliceKorisnika(korisnikId);
 
         Korisnik optKorisnik = (Korisnik)session.getAttribute("korisnik");
 
@@ -326,7 +339,7 @@ public class KorisnikRestController {
             policaService.save(polica);
             korisnikService.save(prijavljeniKorisnik);
 
-            return new ResponseEntity<String>("kreirano", HttpStatus.CREATED);
+            return new ResponseEntity<String>( HttpStatus.CREATED);
         }
         return new ResponseEntity(HttpStatus.FORBIDDEN);
     }
@@ -473,7 +486,7 @@ public class KorisnikRestController {
 
         return new ResponseEntity<>("Uspesno dodata recenzija!", HttpStatus.OK);
     }
-    @PostMapping("/azuriraj-profil")
+    @PutMapping("/azuriraj-profil")
     public ResponseEntity<String> azurirajProfil(@RequestBody KorisnikDto korisnikDTO, HttpSession session) {
         // Provera da li je korisnik prijavljen
         Korisnik prijavljeniKorisnik = (Korisnik) session.getAttribute("korisnik");
@@ -534,6 +547,20 @@ public class KorisnikRestController {
         return new ResponseEntity<>("Ispravna lozinka!", HttpStatus.OK);
 
     }
+
+    /*@GetMapping("/police-prijavljenog-korisnika")
+    public ResponseEntity<List<PolicaDto>> getPolicePrijavljenogKorisnika(HttpSession session) {
+
+        Korisnik prijavljeniKorisnik = (Korisnik) session.getAttribute("korisnik");
+
+        if (prijavljeniKorisnik != null) {
+            List<PolicaDto> policeDtoList = policaService.getPolicePrijavljenogKorisnika(prijavljeniKorisnik.getId());
+            return ResponseEntity.ok(policeDtoList);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }*/
+
 
 
 
