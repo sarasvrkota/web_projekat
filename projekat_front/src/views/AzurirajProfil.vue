@@ -64,9 +64,10 @@
               throw new Error('Profile update failed');
             }
           })
+
           .then((data) => {
             console.log(data);
-            alert('Profil uspešno ažuriran!');
+            alert('Profil uspešno azuriran!');
           })
           .catch((error) => {
             console.error(error);
