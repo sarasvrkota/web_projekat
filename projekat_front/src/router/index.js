@@ -77,7 +77,11 @@ const routes = [
 { //kada se loginuje prebaci se na ovu putanju
   path: '/autor',
   name: 'Autor',
-  component: Autor
+  component: Autor,
+  meta: {
+    requiresAuth: true, // Dodajte ovu liniju kako biste obezbedili da samo prijavljeni korisnici mogu pristupiti ovoj ruti
+    role: 'AUTOR' 
+  }
 },
 { //kada se loginuje prebaci se na ovu putanju
   path: '/administrator',

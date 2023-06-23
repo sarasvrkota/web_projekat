@@ -7,6 +7,8 @@
       <button type="submit">Dodaj žanr</button>
     </form>
     <button @click="preusmeriNaNovuKnjigu">Dodaj novu knjigu</button>
+    <button @click="preusmeri">Pregledaj knjige</button>
+    <button @click="preusmeri2">Pregledaj zanrove</button>
   </div>
 </template>
 
@@ -53,6 +55,12 @@ export default {
     },
     preusmeriNaNovuKnjigu() {
       this.$router.push('/dodavanje-knjige-admin');
+    },
+    preusmeri() {
+      this.$router.push('/sveknjige');
+    },
+    preusmeri2() {
+      this.$router.push('/svi-zanrovi');
     }
   }
 };

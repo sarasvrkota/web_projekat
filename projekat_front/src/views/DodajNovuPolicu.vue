@@ -27,7 +27,7 @@
       if (response.ok) {
         this.$router.push('citalac');
       } else {
-        throw new Error('Neuspešno dodavanje nove police!');
+        throw new Error('Neuspesno dodavanje nove police!');
       }
     })
     .catch(error => {
